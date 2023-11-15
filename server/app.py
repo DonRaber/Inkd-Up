@@ -6,41 +6,159 @@ from config import db, app
 def index():
     return '<h1>Inkd Up</h1>'
 
-@app.route('/users', methods = ['POST', 'PATCH', 'DELETE'])
+# -----------------------------------
+# USERS
+# -----------------------------------
+
+@app.route('/users', methods = ['GET','POST'])
 def users():
     users = User.query.all()
-    return make_response([user.to_dict(rules = ('-artist.appointments', '-artist.pictures', '-artist.reviews', '-client.appointments', '-client.reviews', '-shop.appointments')) for user in users], 200)
 
-@app.route('/clients', methods = ['GET', 'POST', 'PATCH', 'DELETE'])
+    if request.method == 'GET':
+        return make_response([user.to_dict(rules = ('-artist.appointments', '-artist.pictures', '-artist.reviews', '-client.appointments', '-client.reviews', '-shop.appointments')) for user in users], 200)
+    
+    elif request.method == 'POST':
+        form_data = request.get_json()
+        try:
+            new_user = User(
+                username = form_data['username'],
+                email = form_data['email'],
+                password = form_data['password']
+            )
+            db.session.add(new_user)
+            db.session.commit()
+            resp = make_response(new_user.to_dict(), 201)
+        except ValueError:
+            resp = make_response({'error': ['Validation Errors']}, 400)
+    return resp
+
+# USER BY ID
+
+@app.route('/user/<int:id>', methods=['GET', 'PATCH', 'DELETE'])
+def user_by_id(id):
+    user = User.query.filter_by(id = id).first()
+
+    if user:
+
+        if request.method == 'GET':
+            resp = make_response(user.to_dict(rules = ('-artist.appointments', '-artist.pictures', '-artist.reviews', '-client.appointments', '-client.reviews', '-shop.appointments')), 200)
+
+        elif request.method == 'PATCH':
+            form_data = request.get_json()
+            try:
+                for attr in form_data:
+                    setattr(user, attr, form_data.get(attr))
+                db.session.commit()
+                resp = make_response(user.to_dict(), 202)
+            except ValueError:
+                resp = make_response({'error': ['Validation Errors']}, 400)
+                return resp
+        
+        elif request.method == 'DELETE':
+            db.session.delete(user)
+            db.session.commit()
+            resp = make_response({}, 204)
+
+    else:
+        resp = make_response({'error': 'No User Found'}, 404)
+
+    return resp
+
+
+# -----------------------------------
+# CLIENTS
+# -----------------------------------
+
+@app.route('/clients', methods = ['GET', 'POST'])
 def clients():
     clients = Client.query.all()
-    return make_response([client.to_dict(rules = ('-reviews.artist',)) for client in clients], 200)
 
+    if request.method == 'GET':
+        return make_response([client.to_dict(rules = ('-reviews.artist',)) for client in clients], 200)
     
+    elif request.method == 'POST':
+        form_data = request.get_json()
+        try:
+            new_client = Client(
+                name = form_data['name'],
+            )
+            db.session.add(new_client)
+            db.session.commit()
+            resp = make_response(new_client.to_dict(), 201)
+        except ValueError:
+            resp = make_response({'error': ['Validation Errors']}, 400)
+    return resp
 
-@app.route('/artists', methods = ['GET', 'POST', 'PATCH', 'DELETE'])
+# -----------------------------------
+# ARTISTS
+# -----------------------------------
+
+@app.route('/artists', methods = ['GET', 'POST'])
 def artists():
     artists = Artist.query.all()
-    return make_response([artist.to_dict(rules = ('-appointments.client', '-reviews.client')) for artist in artists], 200)
+
+    if request.method == 'GET':
+        return make_response([artist.to_dict(rules = ('-appointments.client', '-reviews.client')) for artist in artists], 200)
     
+    elif request.method == 'POST':
+        form_data = request.get_json()
+        try:
+            new_artist = Artist(
+                name = form_data['name'],
+            )
+            db.session.add(new_artist)
+            db.session.commit()
+            resp = make_response(new_artist.to_dict(), 201)
+        except ValueError:
+            resp = make_response({'error': ['Validation Errors']}, 400)
+    return resp
+    
+# -----------------------------------
+# SHOPS
+# -----------------------------------
 
 @app.route('/shops', methods = ['GET', 'POST', 'PATCH', 'DELETE'])
 def shops():
     shops = Shop.query.all()
-    return make_response([shop.to_dict(rules = ('-appointments.artist', '-appointments.client')) for shop in shops], 200)
+
+    if request.method == 'GET':
+        return make_response([shop.to_dict(rules = ('-appointments.artist', '-appointments.client')) for shop in shops], 200)
     
+    elif request.method == 'POST':
+        form_data = request.get_json()
+        try:
+            new_shop = Shop(
+                name = form_data['name'],
+                location = form_data['location']
+            )
+            db.session.add(new_shop)
+            db.session.commit()
+            resp = make_response(new_shop.to_dict(), 201)
+        except ValueError:
+            resp = make_response({'error': ['Validation Errors']}, 400)
+    return resp
+
+# -----------------------------------
+# APPOINTMENTS
+# -----------------------------------
 
 @app.route('/appointments', methods = ['GET', 'POST', 'PATCH', 'DELETE'])
 def appointments():
     appointments = Appointment.query.all()
     return make_response([appointment.to_dict(rules = ('-artist.pictures', '-artist.user', '-artist.reviews', '-client.reviews', '-client.user', '-shop.user')) for appointment in appointments], 200)
-    
+
+# -----------------------------------
+# PICTURES
+# -----------------------------------
 
 @app.route('/pictures', methods = ['GET', 'POST', 'DELETE'])
 def pictures():
     pictures = Picture.query.all()
     return make_response([picture.to_dict(rules = ('-artist.appointments', '-artist.reviews', '-artist.user')) for picture in pictures], 200)
-    
+
+# -----------------------------------
+# REVIEWS
+# -----------------------------------
 
 @app.route('/reviews', methods = ['GET', 'POST', 'DELETE'])
 def reviews():
