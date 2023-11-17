@@ -12,18 +12,27 @@ with app.app_context():
     Review.query.delete()
     User.query.delete()
 
-    user1 = User(username = 'Roqit', password_hash = 'Abc1231', email = 'example@example')
-    user2 = User(username = 'Roqit1', password_hash = 'Abc1231', email = 'example@example1')
-    user3 = User(username = 'Roqit2', password_hash = 'Abc1231', email = 'example@example2')
-    user4 = User(username = 'Roqit3', password_hash = 'Abc1231', email = 'example@example3')
-    user5 = User(username = 'Roqit4', password_hash = 'Abc1231', email = 'example@example4')
+    user1 = User(username = 'Roqit', email = 'example@example')
+    user2 = User(username = 'Roqit1', email = 'example@example1')
+    user3 = User(username = 'Roqit2', email = 'example@example2')
+    user4 = User(username = 'Roqit3', email = 'example@example3')
+    user5 = User(username = 'Roqit4', email = 'example@example4')
+    user1.password_hash = 'Abc1231'
+    user2.password_hash = 'Abc1231'
+    user3.password_hash = 'Abc1231'
+    user4.password_hash = 'Abc1231'
+    user5.password_hash = 'Abc1231'
     db.session.add_all([user1, user2, user3, user4, user5])
     db.session.commit()
 
-    user6 = User(username = 'Roqit5', password_hash = 'Abc1231', email = 'example@example5')
-    user7 = User(username = 'Roqit6', password_hash = 'Abc1231', email = 'example@example6')
-    user8 = User(username = 'Roqit7', password_hash = 'Abc1231', email = 'example@example7')
-    user9 = User(username = 'Roqit8', password_hash = 'Abc1231', email = 'example@example8')
+    user6 = User(username = 'Roqit5', email = 'example@example5')
+    user7 = User(username = 'Roqit6', email = 'example@example6')
+    user8 = User(username = 'Roqit7', email = 'example@example7')
+    user9 = User(username = 'Roqit8', email = 'example@example8')
+    user6.password_hash = 'Abc1231'
+    user7.password_hash = 'Abc1231'
+    user8.password_hash = 'Abc1231'
+    user9.password_hash = 'Abc1231'
     db.session.add_all([user6, user7, user8, user9])
     db.session.commit()
 

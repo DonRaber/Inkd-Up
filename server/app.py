@@ -1,10 +1,80 @@
-from flask import make_response, request
+from flask import make_response, request, session
+from sqlalchemy.exc import IntegrityError
 from models import db, Client, Artist, Shop, Appointment, Picture, Review, User
 from config import db, app
 
 @app.route('/')
 def index():
     return '<h1>Inkd Up</h1>'
+
+# @app.before_request
+# def check_if_logged_in():
+#     open_access_list = [
+#         'signup',
+#         'login',
+#         'check_session'
+#     ]
+
+#     if request.endpoint not in open_access_list and 'user_id' not in session:
+#         return make_response({'error': '401 Unauthorized'}, 401)
+
+@app.route('/signup', methods=['POST'])
+def signup():
+    request_json = request.get_json()
+
+    username = request_json.get('username')
+    password = request_json.get('password')
+    email = request_json.get('email')
+
+    user = User(
+        username=username,
+        email=email,
+    )
+
+    # the setter will encrypt this
+    user.password_hash = password
+
+    try:
+        db.session.add(user)
+        db.session.commit()
+
+        session['user_id'] = user.id
+
+        return make_response(user.to_dict(), 201)
+
+    except IntegrityError:
+        return make_response({'error': '422 Unprocessable Entity'}, 422)
+
+@app.route('/check_session', methods=['GET'])
+def check_session():
+    user_id = session.get('user_id')
+    if user_id:
+        user = User.query.filter(User.id == user_id).first()
+        return make_response(user.to_dict(), 200)
+
+    return make_response({}, 401)
+
+@app.route('/login', methods=['POST'])
+def login():
+    form_data = request.get_json()
+
+    username = form_data['username']
+    password = form_data['password']
+
+    user = User.query.filter_by(username = username).first()
+
+    print(user)
+    if user:
+        if user.authenticate(password):
+            session['user_id'] = user.id
+            return make_response(user.to_dict(), 200)
+
+    return make_response({'error': '401 Unauthorized'}, 401)
+
+@app.route('/logout', methods=['DELETE'])
+def logout():
+    session.pop('user_id', None)
+    return make_response({}, 204)
 
 # -----------------------------------
 # USERS

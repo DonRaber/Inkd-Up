@@ -1,6 +1,7 @@
 from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.orm import validates
+from sqlalchemy.ext.hybrid import hybrid_property
 import re
 
 from config import db, bcrypt
@@ -11,7 +12,7 @@ class User(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, unique=True)
     email = db.Column(db.String, unique=True)
-    password_hash = db.Column(db.String)
+    _password_hash = db.Column(db.String)
     profilePic = db.Column(db.String)
 
     client = db.relationship('Client', back_populates = 'user', cascade = 'all, delete-orphan')
@@ -20,11 +21,18 @@ class User(db.Model, SerializerMixin):
 
     serialize_rules = ('-client.user', '-artist.user', '-shop.user')
     
-    def set_password(self, password):
-        self.password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
+    @hybrid_property
+    def password_hash(self):
+        raise AttributeError("Access Denied")
+    
+    @password_hash.setter
+    def password_hash(self, password):
+        new_hashed_password = bcrypt.generate_password_hash(password.encode('utf-8'))
 
-    def check_password(self, password):
-        return bcrypt.check_password_hash(self.password_hash, password)
+        self._password_hash = new_hashed_password.decode('utf-8')
+
+    def authenticate(self, password):
+        return bcrypt.check_password_hash(self._password_hash, password.encode('utf-8'))
     
     @validates('username')
     def validates_username(self, key, username):
