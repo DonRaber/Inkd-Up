@@ -1,12 +1,14 @@
 import React from 'react';
+import { useHistory } from "react-router-dom";
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 
-const LoginForm = ({ users }) => {
+const LoginForm = ({ setLoggedIn }) => {
     const initialValues = {
         username: '',
         password: '',
     };
+    const history = useHistory()
 
     const validationSchema = Yup.object().shape({
         username: Yup.string().required('Required'),
@@ -26,7 +28,8 @@ const LoginForm = ({ users }) => {
 
             if (response.ok) {
                 const user = await response.json();
-                users(user);
+                setLoggedIn(user)
+                history.push('/')
             } else {
                 const error = await response.json();
                 console.error('Login failed:', error);
