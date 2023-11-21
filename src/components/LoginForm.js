@@ -29,7 +29,7 @@ const LoginForm = ({ setLoggedIn }) => {
             if (response.ok) {
                 const user = await response.json();
                 setLoggedIn(user)
-                history.push('/')
+                history.push(`/account_home/${user.username}`)
             } else {
                 const error = await response.json();
                 console.error('Login failed:', error);

@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 
-function Registration() {
+function Registration({setLoggedIn}) {
 
     const history = useHistory()
     const [message, setMessage] = useState('');
@@ -40,8 +40,9 @@ function Registration() {
                 const newUser = await response.json();
                 // onSignup(newUser); // Callback to handle successful signup
                 setMessage('Login successful. Redirecting to home...');
+                setLoggedIn(newUser)
                 setTimeout(() => {
-                    history.push(`/account_home`); // After 2 seconds, navigate to the store profile page
+                    history.push(`/account_home/${newUser.username}`); // After 2 seconds, navigate to the store profile page
                 }, 2000);
             } else {
                 const error = await response.json();

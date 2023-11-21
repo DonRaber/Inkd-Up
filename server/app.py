@@ -159,6 +159,35 @@ def clients():
             resp = make_response({'error': ['Validation Errors']}, 400)
     return resp
 
+# CLIENT BY USER_ID
+
+@app.route('/clients/user_<int:user_id>', methods=['PATCH', 'DELETE'])
+def client_by_user_id(user_id):
+    client_by_user_id = Client.query.filter_by(user_id = user_id).first()
+    if client_by_user_id:
+
+# ---------------- PATCH -----------------------
+        if request.method == 'PATCH':
+            form_data = request.get_json()
+            try:
+                for attr in form_data:
+                    setattr(client_by_id, attr, form_data.get(attr))
+                db.session.commit()
+                resp = make_response(client_by_id.to_dict(), 202)
+            except ValueError:
+                resp = make_response({ "errors": ["Validation Errors"]}, 400)
+
+# ---------------- DELETE -----------------------
+
+        elif request.method == 'DELETE':
+            db.session.delete(client_by_user_id)
+            db.session.commit()
+            resp = make_response({}, 204)
+                
+    else:
+        resp = make_response({ "error": "No Client Found!"}, 404)
+    return resp
+
 # -----------------------------------
 # ARTISTS
 # -----------------------------------
@@ -182,12 +211,41 @@ def artists():
         except ValueError:
             resp = make_response({'error': ['Validation Errors']}, 400)
     return resp
+
+# ARTIST BY USER_ID
+
+@app.route('/artists/user_<int:user_id>', methods=['PATCH', 'DELETE'])
+def artist_by_user_id(user_id):
+    artist_by_user_id = Artist.query.filter_by(user_id = user_id).first()
+    if artist_by_user_id:
+
+# ---------------- PATCH -----------------------
+        if request.method == 'PATCH':
+            form_data = request.get_json()
+            try:
+                for attr in form_data:
+                    setattr(artist_by_id, attr, form_data.get(attr))
+                db.session.commit()
+                resp = make_response(artist_by_id.to_dict(), 202)
+            except ValueError:
+                resp = make_response({ "errors": ["Validation Errors"]}, 400)
+
+# ---------------- DELETE -----------------------
+
+        elif request.method == 'DELETE':
+            db.session.delete(artist_by_user_id)
+            db.session.commit()
+            resp = make_response({}, 204)
+                
+    else:
+        resp = make_response({ "error": "No Artist Found!"}, 404)
+    return resp
     
 # -----------------------------------
 # SHOPS
 # -----------------------------------
 
-@app.route('/shops', methods = ['GET', 'POST', 'PATCH', 'DELETE'])
+@app.route('/shops', methods = ['GET', 'POST'])
 def shops():
     shops = Shop.query.all()
 
@@ -206,6 +264,35 @@ def shops():
             resp = make_response(new_shop.to_dict(), 201)
         except ValueError:
             resp = make_response({'error': ['Validation Errors']}, 400)
+    return resp
+
+# SHOP BY USER_ID
+
+@app.route('/shops/user_<int:user_id>', methods=['PATCH', 'DELETE'])
+def shop_by_user_id(user_id):
+    shop_by_user_id = Shop.query.filter_by(user_id = user_id).first()
+    if shop_by_user_id:
+
+# ---------------- PATCH -----------------------
+        if request.method == 'PATCH':
+            form_data = request.get_json()
+            try:
+                for attr in form_data:
+                    setattr(shop_by_id, attr, form_data.get(attr))
+                db.session.commit()
+                resp = make_response(shop_by_id.to_dict(), 202)
+            except ValueError:
+                resp = make_response({ "errors": ["Validation Errors"]}, 400)
+
+# ---------------- DELETE -----------------------
+
+        elif request.method == 'DELETE':
+            db.session.delete(shop_by_user_id)
+            db.session.commit()
+            resp = make_response({}, 204)
+                
+    else:
+        resp = make_response({ "error": "No Shop Found!"}, 404)
     return resp
 
 # -----------------------------------

@@ -41,25 +41,42 @@ function App() {
     return (
         <div>
             <h1>React Started</h1>
+            <img id='logo' src='./Inkd_Up_logo.jpeg' alt='Inkd Up' />
             <Fetch
                 setClients={setClients}
                 setArtists={setArtists}
                 setShops={setShops}
                 setUsers={setUsers}
             />
-            <Link to='/account_home'><button>Next Page</button></Link>
+            <Link to='/account_home/:username'><button>Next Page</button></Link>
             <Switch>
                 <Route exact path='/'>
-                    <h1>Homepage(includes: Overview)</h1>
+                    <div>
+                        <h1>Overview</h1>
+                        <div>
+                            <p>Ink'd Up is the ultimate platform designed exclusively for the vibrant world of tattoo artistry.</p>
+                            <br />
+                            <p>With a mission is to revolutionize the way tattoo artists, clients, and tattoo shops connect and collaborate.</p>
+                            <br />
+                            <p>We provide an intuitive, all-in-one solution to simplify the process of connecting with the perfect tattoo artist, scheduling appointments and consultations, and a place for artists to foster opportunities for upcoming artists and apprentices to thrive in the industry.</p>
+                            <br />
+                            <p> But…</p>
+                            <br />
+                            <p>Ink’d Up isn’t just for clients finding the right artist, it’s a virtual space where tattoo artists of all backgrounds, styles, and disciplines can come together to connect, collaborate, and find inspiration in the world of art.
+                            </p>
+                        </div>
+                    </div>
                 </Route>
                 <Route exact path='/login'>
                     <LoginForm users={users} setLoggedIn={setLoggedIn} />
                 </Route>
                 <Route exact path='/registration'>
                     <h1>Register For new Account</h1>
-                    <Registration />
+                    <Registration
+                        setLoggedIn={setLoggedIn}
+                    />
                 </Route>
-                <Route exact path='/account_home/'>
+                <Route exact path='/account_home/:username'>
                     {userProfile}
                 </Route>
                 <Route exact path='/user_profile/:username'>
@@ -78,7 +95,10 @@ function App() {
                     />
                 </Route>
                 <Route exact path='/profile_manager'>
-                    <ProfileManager />
+                    <ProfileManager
+                        loggedIn={loggedIn}
+                        setLoggedIn={setLoggedIn}
+                    />
                 </Route>
             </Switch>
         </div>
