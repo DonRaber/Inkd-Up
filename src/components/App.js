@@ -7,6 +7,8 @@ import Profile from './Profile';
 import ProfileManager from './ProfileManager';
 import Registration from './Registration';
 import Navbar from './NavBar';
+// import { connect } from 'react-redux';
+// import { fetchUserData } from '../store/actions'
 
 function App() {
     const [clients, setClients] = useState([])
@@ -15,9 +17,14 @@ function App() {
     const [users, setUsers] = useState([])
     const [loggedIn, setLoggedIn] = useState({})
 
-    const currentProfile = users.filter(user => {
-        return user.username.includes(loggedIn.username)
-    })
+    // useEffect(() => {
+    //     // Fetch user data when the component mounts
+    //     fetchUserData();
+    // }, [fetchUserData]);
+
+    // const currentProfile = users.filter(user => {
+    //     return user.username.includes(loggedIn.username)
+    // })
 
     const userProfile = currentProfile.map((profile) => {
         return <Profile
@@ -47,6 +54,7 @@ function App() {
                 setArtists={setArtists}
                 setShops={setShops}
                 setUsers={setUsers}
+                setLoggedIn={setLoggedIn}
             />
             <Switch>
                 <Route exact path='/'>

@@ -16,9 +16,7 @@ function ArtistEdit({ loggedIn, setLoggedIn }) {
     const validationSchema = Yup.object().shape({
         name: Yup.string().required('Required'),
     });
-    console.log(loggedIn.id)
     const handleSubmit = async (values, { setSubmitting }) => {
-        console.log(values)
         try {
             const response = await fetch(`/artists/user_${loggedIn.id}`, {
                 method: 'PATCH',

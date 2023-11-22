@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 
-const LoginForm = ({ setLoggedIn }) => {
+const LoginForm = () => {
     const initialValues = {
         username: '',
         password: '',
@@ -28,7 +28,6 @@ const LoginForm = ({ setLoggedIn }) => {
 
             if (response.ok) {
                 const user = await response.json();
-                setLoggedIn(user)
                 history.push(`/account_home/${user.username}`)
             } else {
                 const error = await response.json();

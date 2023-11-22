@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import UserEdit from "./UserEdit";
 import ArtistEdit from "./ArtistEdit";
 import ShopEdit from "./ShopEdit";
+import { Link } from "react-router-dom/cjs/react-router-dom.min";
 
 function ProfileManager({ loggedIn, setLoggedIn, setUsers, setArtists, setShops }) {
     const [isUser, setIsUser] = useState(false)
@@ -14,6 +15,7 @@ function ProfileManager({ loggedIn, setLoggedIn, setUsers, setArtists, setShops 
 
     return (
         <div>
+            <Link to='/' ><button>Return to Profile</button></Link>
             <div>
             <button onClick={() => setIsUser(!isUser)} >Edit User</button>
                 { isUser ? (<UserEdit

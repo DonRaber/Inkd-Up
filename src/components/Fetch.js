@@ -1,6 +1,6 @@
 import React, { useEffect} from "react";
 
-function Fetch({setClients, setArtists, setShops, setUsers}){
+function Fetch({setClients, setArtists, setShops, setUsers, setLoggedIn}){
 
     useEffect(() => {
         fetch('/clients')
@@ -24,6 +24,15 @@ function Fetch({setClients, setArtists, setShops, setUsers}){
         fetch('/users')
             .then((resp) => resp.json())
             .then(setUsers)
+    }, [])
+
+    useEffect(() => {
+        fetch('/check_session')
+        .then((resp) => {
+            if (resp.ok) {
+                resp.json().then((data) => setLoggedIn(data))
+            }
+        })
     }, [])
 
     return <></>
