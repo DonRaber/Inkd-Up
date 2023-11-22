@@ -1,6 +1,5 @@
 import { Route, Switch } from 'react-router-dom';
 import React, { useState, useEffect } from "react";
-import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 import Fetch from './Fetch';
 import LoginForm from './LoginForm';
 import AppointmentForm from './AppointmentForm';
@@ -98,6 +97,9 @@ function App() {
                     <ProfileManager
                         loggedIn={loggedIn}
                         setLoggedIn={setLoggedIn}
+                        setUsers={setUsers}
+                        setArtists={setArtists}
+                        setShops={setShops}
                     />
                 </Route>
             </Switch>

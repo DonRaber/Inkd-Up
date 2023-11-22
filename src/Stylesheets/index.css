@@ -1,9 +1,9 @@
 #logo{
-    width: 10%;
+    width: 150px;
     height: auto;
     position: relative;
-    top: 10px;
-    left: 10px
+    top: 0px;
+    left: 0px
 }
 
 #overview_container{

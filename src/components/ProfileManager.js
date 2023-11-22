@@ -1,127 +1,43 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom/cjs/react-router-dom.min";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
-import { Formik, Field, Form, ErrorMessage } from 'formik';
-import * as Yup from 'yup';
+import UserEdit from "./UserEdit";
+import ArtistEdit from "./ArtistEdit";
+import ShopEdit from "./ShopEdit";
 
-function ProfileManager({ loggedIn, setLoggedIn }) {
-    const history = useHistory()
-    const [message, setMessage] = useState('');
-    const [users, setUsers] = useState([])
+function ProfileManager({ loggedIn, setLoggedIn, setUsers, setArtists, setShops }) {
+    const [isUser, setIsUser] = useState(false)
+    const [isClient, setIsClient] = useState(false)
+    const [isArtist, setIsArtist] = useState(false)
+    const [isShop, setIsShop] = useState(false)
 
-
-
-    const initialValues = {
-        username: `${loggedIn.username}`,
-        email: `${loggedIn.email}`,
-        password: `${loggedIn.password}`,
-        confirmPassword: `${loggedIn.password}`,
-    };
-
-    const validationSchema = Yup.object().shape({
-        username: Yup.string().required('Required'),
-        email: Yup.string().email('Invalid email address').required('Required'),
-        password: Yup.string().required('Required'),
-        confirmPassword: Yup.string()
-            .oneOf([Yup.ref('password'), null], 'Passwords must match')
-            .required('Required'),
-    });
-    console.log(loggedIn.id)
-    const handleSubmit = async (values, { setSubmitting }) => {
-        try {
-            const response = await fetch(`/user/${loggedIn.id}`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(values),
-            });
-
-            if (response.ok) {
-                const updatedUser = await response.json();
-                setMessage('Update successful. Redirecting to home...');
-                setLoggedIn(updatedUser);
-                setTimeout(() => {
-                    history.push(`/account_home/${updatedUser.username}`);
-                }, 2000);
-            } else {
-                const error = await response.json();
-                console.error('User update failed:', error);
-            }
-        } catch (error) {
-            console.error('Error during User update:', error);
-        }
-
-        setSubmitting(false);
-    }
-
-
-    function handleDeleteUser(id) {
-        fetch(`/users/${id}`, { method: "DELETE" }).then((resp) => {
-            if (resp.ok) {
-                setUsers((userArr) =>
-                    userArr.filter((user) => user.id !== id)
-                );
-                window.location.reload();
-                history.push('/')
-                alert(`user ${loggedIn.username} Deleted!`)
-            }
-        });
-    }
-
+    console.log(loggedIn)
 
     return (
         <div>
             <div>
-                <h1>Edit Info Here</h1>
+            <button onClick={() => setIsUser(!isUser)} >Edit User</button>
+                { isUser ? (<UserEdit
+                    loggedIn={loggedIn}
+                    setLoggedIn={setLoggedIn}
+                    setUsers={setUsers}
+                />) : null }
             </div>
-
-            {message ? (
-                <div>
-                    <div>{message}</div>
-                </div>
-            ) : (
-                <div>
-                    <div>Edit Account: </div>
-                    <Formik
-                        initialValues={initialValues}
-                        validationSchema={validationSchema}
-                        onSubmit={handleSubmit}
-                    >
-                        <Form>
-                            <br />
-                            <div>
-                                <label htmlFor="username">Username:</label>
-                                <Field type="text" id="username" name="username" />
-                                <ErrorMessage name="username" component="div" />
-                            </div>
-                            <br />
-                            <div>
-                                <label htmlFor="email">Email:</label>
-                                <Field type="email" id="email" name="email" />
-                                <ErrorMessage name="email" component="div" />
-                            </div>
-                            <br />
-                            <div>
-                                <label htmlFor="password">Password:</label>
-                                <Field type="password" id="password" name="password" />
-                                <ErrorMessage name="password" component="div" />
-                            </div>
-                            <br />
-                            <div>
-                                <label htmlFor="confirmPassword">Confirm Password:</label>
-                                <Field type="password" id="confirmPassword" name="confirmPassword" />
-                                <ErrorMessage name="confirmPassword" component="div" />
-                            </div>
-                            <br />
-                            <div>
-                                <button type="submit">Save Changes</button>
-                            </div>
-                        </Form>
-                    </Formik>
-                    <button on onClick={() => handleDeleteUser(loggedIn.id)}>Delete User</button>
-                </div>
-            )}
+            <div>
+            <button onClick={() => setIsArtist(!isArtist)} >Edit Artist</button>
+                { isArtist ? (<ArtistEdit
+                    loggedIn={loggedIn}
+                    setLoggedIn={setLoggedIn}
+                    setArtists={setArtists}
+                />) : null }
+            </div>
+            <div>
+            <button onClick={() => setIsShop(!isShop)} >Edit Shop</button>
+                { isShop ? (<ShopEdit
+                    loggedIn={loggedIn}
+                    setLoggedIn={setLoggedIn}
+                    setShops={setShops}
+                />) : null }
+            </div>
         </div>
     )
 }

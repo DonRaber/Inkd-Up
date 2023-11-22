@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 
-function Navbar({ }) {
+function Navbar() {
 
     const [toggle, setToggle] = useState(true)
     // const [searchToggle, setToggleSearch] = useState(false)
@@ -19,10 +19,10 @@ function Navbar({ }) {
     // }
 
 
-    const nav = (toggle ? <img id='logo' src='./Inkd_Up_logo.jpeg' alt='Inkd Up' className="login-butt" onClick={toggleNav} /> :
+    const nav = (toggle ? <img id='logo' src='./Nav_Logo2.jpg' alt='Inkd Up' className="login-butt" onClick={toggleNav} /> :
         <nav id="navbar" >
             <div className="navbar">
-                <img id='logo' src='./Inkd_Up_logo.jpeg' alt='Inkd Up' className="login-butt" onClick={toggleNav} />
+                <img id='logo' src='./Nav_Logo.jpeg' alt='Inkd Up' className="login-butt" onClick={toggleNav} />
                 <NavLink className='link' to="/" activeClassName="active">Home</NavLink>
                 <NavLink className='link' to="/login" activeClassName="active" >Login</NavLink>
                 <NavLink className='link' to="/registration" activeClassName="active" >Register</NavLink>

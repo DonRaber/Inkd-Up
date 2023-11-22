@@ -115,6 +115,7 @@ def user_by_id(id):
 
         elif request.method == 'PATCH':
             form_data = request.get_json()
+            print(form_data)
             try:
                 for attr in form_data:
                     setattr(user, attr, form_data.get(attr))

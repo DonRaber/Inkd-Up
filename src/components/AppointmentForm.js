@@ -50,10 +50,6 @@ function AppointmentForm({loggedIn, artsits, shops}) {
         console.log(values)
     }
 
-    // console.log(loggedIn.client[0].id)
-    // console.log(artistSearch)
-    // console.log(shopSearch)
-
     return (<>
         <Formik
             initialValues={initialValues}
