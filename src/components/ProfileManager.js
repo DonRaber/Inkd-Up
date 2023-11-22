@@ -1,12 +1,13 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 
-function ProfileManager({loggedIn, setLoggedIn}) {
+function ProfileManager({ loggedIn, setLoggedIn }) {
     const history = useHistory()
     const [message, setMessage] = useState('');
+    const [users, setUsers] = useState([])
 
 
 
@@ -14,7 +15,7 @@ function ProfileManager({loggedIn, setLoggedIn}) {
         username: `${loggedIn.username}`,
         email: `${loggedIn.email}`,
         password: `${loggedIn.password}`,
-        confirmPassword: `${loggedIn.password}`, // New field for confirming the password
+        confirmPassword: `${loggedIn.password}`,
     };
 
     const validationSchema = Yup.object().shape({
@@ -29,13 +30,13 @@ function ProfileManager({loggedIn, setLoggedIn}) {
     const handleSubmit = async (values, { setSubmitting }) => {
         try {
             const response = await fetch(`/user/${loggedIn.id}`, {
-                method: 'PATCH', // Change the method to PATCH
+                method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(values),
             });
-    
+
             if (response.ok) {
                 const updatedUser = await response.json();
                 setMessage('Update successful. Redirecting to home...');
@@ -50,14 +51,29 @@ function ProfileManager({loggedIn, setLoggedIn}) {
         } catch (error) {
             console.error('Error during User update:', error);
         }
-    
+
         setSubmitting(false);
     }
+
+
+    function handleDeleteUser(id) {
+        fetch(`/users/${id}`, { method: "DELETE" }).then((resp) => {
+            if (resp.ok) {
+                setUsers((userArr) =>
+                    userArr.filter((user) => user.id !== id)
+                );
+                window.location.reload();
+                history.push('/')
+                alert(`user ${loggedIn.username} Deleted!`)
+            }
+        });
+    }
+
 
     return (
         <div>
             <div>
-                <Link to='/account_home'><h1>Edit Info Here</h1></Link>
+                <h1>Edit Info Here</h1>
             </div>
 
             {message ? (
@@ -103,12 +119,11 @@ function ProfileManager({loggedIn, setLoggedIn}) {
                             </div>
                         </Form>
                     </Formik>
+                    <button on onClick={() => handleDeleteUser(loggedIn.id)}>Delete User</button>
                 </div>
             )}
         </div>
     )
-
-
 }
 
 export default ProfileManager

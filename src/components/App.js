@@ -7,6 +7,7 @@ import AppointmentForm from './AppointmentForm';
 import Profile from './Profile';
 import ProfileManager from './ProfileManager';
 import Registration from './Registration';
+import Navbar from './NavBar';
 
 function App() {
     const [clients, setClients] = useState([])
@@ -40,20 +41,19 @@ function App() {
 
     return (
         <div>
-            <h1>React Started</h1>
-            <img id='logo' src='./Inkd_Up_logo.jpeg' alt='Inkd Up' />
+            {/* <img id='logo' src='./Inkd_Up_logo.jpeg' alt='Inkd Up' /> */}
+            <Navbar />
             <Fetch
                 setClients={setClients}
                 setArtists={setArtists}
                 setShops={setShops}
                 setUsers={setUsers}
             />
-            <Link to='/account_home/:username'><button>Next Page</button></Link>
             <Switch>
                 <Route exact path='/'>
-                    <div>
+                    <div id='overview_container' align='center'>
                         <h1>Overview</h1>
-                        <div>
+                        <div id='overview_text_container'>
                             <p>Ink'd Up is the ultimate platform designed exclusively for the vibrant world of tattoo artistry.</p>
                             <br />
                             <p>With a mission is to revolutionize the way tattoo artists, clients, and tattoo shops connect and collaborate.</p>
@@ -62,7 +62,7 @@ function App() {
                             <br />
                             <p> But…</p>
                             <br />
-                            <p>Ink’d Up isn’t just for clients finding the right artist, it’s a virtual space where tattoo artists of all backgrounds, styles, and disciplines can come together to connect, collaborate, and find inspiration in the world of art.
+                            <p>Ink'd Up isn't just for clients finding the right artist, it's a virtual space where tattoo artists of all backgrounds, styles, and disciplines can come together to connect, collaborate, and find inspiration in the world of art.
                             </p>
                         </div>
                     </div>

@@ -76,11 +76,6 @@ function AppointmentForm({loggedIn, artsits, shops}) {
                     <Field type='artist_id' id='artist_id' name='artist_id' />
                     <ErrorMessage name='artist_id' component='div' />
                 </div>
-                {/* <div>
-                    <label htmlFor='client_id'>Client:</label>
-                    <Field type='client_id' id='client_id' name='client_id' />
-                    <ErrorMessage name='client_id' component='div' />
-                </div> */}
                 <div>
                     <label htmlFor='shop_id'>Shop:</label>
                     <Field type='shop_id' id='shop_id' name='shop_id' />

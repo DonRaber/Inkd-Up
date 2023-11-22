@@ -104,7 +104,7 @@ def users():
 
 # USER BY ID
 
-@app.route('/user/<int:id>', methods=['GET', 'PATCH', 'DELETE'])
+@app.route('/users/<int:id>', methods=['GET', 'PATCH', 'DELETE'])
 def user_by_id(id):
     user = User.query.filter_by(id = id).first()
 
@@ -171,9 +171,9 @@ def client_by_user_id(user_id):
             form_data = request.get_json()
             try:
                 for attr in form_data:
-                    setattr(client_by_id, attr, form_data.get(attr))
+                    setattr(client_by_user_id, attr, form_data.get(attr))
                 db.session.commit()
-                resp = make_response(client_by_id.to_dict(), 202)
+                resp = make_response(client_by_user_id.to_dict(), 202)
             except ValueError:
                 resp = make_response({ "errors": ["Validation Errors"]}, 400)
 
