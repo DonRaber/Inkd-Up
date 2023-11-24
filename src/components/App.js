@@ -7,24 +7,21 @@ import Profile from './Profile';
 import ProfileManager from './ProfileManager';
 import Registration from './Registration';
 import Navbar from './NavBar';
-// import { connect } from 'react-redux';
-// import { fetchUserData } from '../store/actions'
 
 function App() {
     const [clients, setClients] = useState([])
     const [artists, setArtists] = useState([])
     const [shops, setShops] = useState([])
     const [users, setUsers] = useState([])
-    const [loggedIn, setLoggedIn] = useState({})
+    const [loggedIn, setLoggedIn] = useState(null)
 
-    // useEffect(() => {
-    //     // Fetch user data when the component mounts
-    //     fetchUserData();
-    // }, [fetchUserData]);
-
-    // const currentProfile = users.filter(user => {
-    //     return user.username.includes(loggedIn.username)
-    // })
+    const currentProfile = users.filter(user => {
+        if (loggedIn){
+        return user.username.includes(loggedIn.username)
+    } else {
+        return null
+    }
+    })
 
     const userProfile = currentProfile.map((profile) => {
         return <Profile
