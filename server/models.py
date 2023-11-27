@@ -2,9 +2,11 @@ from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.orm import validates
 from sqlalchemy.ext.hybrid import hybrid_property
+import boto3
+from botocore.exceptions import NoCredentialsError
 import re
 
-from config import db, bcrypt
+from config import db, bcrypt, AWS_ACCESS_KEY, AWS_SECRET_KEY
 
 class User(db.Model, SerializerMixin):
     __tablename__ = 'users'
@@ -13,13 +15,38 @@ class User(db.Model, SerializerMixin):
     username = db.Column(db.String, unique=True)
     email = db.Column(db.String, unique=True)
     _password_hash = db.Column(db.String)
-    profilePic = db.Column(db.String)
+    profilePic = db.Column(db.String, default='https://t4.ftcdn.net/jpg/03/59/58/91/360_F_359589186_JDLl8dIWoBNf1iqEkHxhUeeOulx0wOC5.jpg')
 
     client = db.relationship('Client', back_populates = 'user', cascade = 'all, delete-orphan')
     artist = db.relationship('Artist', back_populates = 'user', cascade = 'all, delete-orphan')
     shop = db.relationship('Shop', back_populates = 'user', cascade = 'all, delete-orphan')
 
     serialize_rules = ('-client.user', '-artist.user', '-shop.user')
+
+    def upload_profile_picture(self, file_path):
+        try:
+            # Replace these values with your S3 bucket details
+            S3_BUCKET = 'linkupinkup'
+
+            s3 = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY, aws_secret_access_key=AWS_SECRET_KEY)
+            # Generate a unique key for the S3 object (you might want to improve this logic)
+            s3_key = f"linkupinkup/{self.id}_{file_path.split('/')[-1]}"
+            
+            # Upload the file to S3
+            with open(file_path, 'rb') as file:
+                s3.upload_fileobj(file, S3_BUCKET, s3_key, ExtraArgs={'ACL': 'public-read'})
+
+            # Update the profile picture URL for the user
+            self.profilePic = f"https://{S3_BUCKET}.s3.amazonaws.com/{s3_key}"
+
+            # Commit the changes to the database
+            db.session.commit()
+
+            return self.profilePic
+
+        except NoCredentialsError:
+            print('S3 credentials not available')
+            return None
     
     @hybrid_property
     def password_hash(self):

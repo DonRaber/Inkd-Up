@@ -135,6 +135,29 @@ def user_by_id(id):
 
     return resp
 
+@app.route('/upload_profile_picture', methods=['PATCH'])
+def upload_profile_picture():
+    try:
+        user_id = request.form.get('user_id')
+        user = User.query.get(user_id)
+
+        if user:
+            file = request.files['image']
+            uploaded_url = user.upload_profile_picture(file)
+
+            if uploaded_url:
+                resp = make_response({'success': True, 'message': 'Profile picture uploaded successfully'}, 200)
+                return resp
+            else:
+                resp = make_response({'success': False, 'message': 'Failed to upload profile picture'}, 500)
+                return resp
+        else:
+            resp = make_response({'success': False, 'message': 'User not found'}, 404)
+            return resp
+    except Exception as e:
+        resp = make_response({'success': False, 'message': str(e)}, 500)
+        return resp
+
 
 # -----------------------------------
 # CLIENTS
@@ -225,9 +248,9 @@ def artist_by_user_id(user_id):
             form_data = request.get_json()
             try:
                 for attr in form_data:
-                    setattr(artist_by_id, attr, form_data.get(attr))
+                    setattr(artist_by_user_id, attr, form_data.get(attr))
                 db.session.commit()
-                resp = make_response(artist_by_id.to_dict(), 202)
+                resp = make_response(artist_by_user_id.to_dict(), 202)
             except ValueError:
                 resp = make_response({ "errors": ["Validation Errors"]}, 400)
 
@@ -279,9 +302,9 @@ def shop_by_user_id(user_id):
             form_data = request.get_json()
             try:
                 for attr in form_data:
-                    setattr(shop_by_id, attr, form_data.get(attr))
+                    setattr(shop_by_user_id, attr, form_data.get(attr))
                 db.session.commit()
-                resp = make_response(shop_by_id.to_dict(), 202)
+                resp = make_response(shop_by_user_id.to_dict(), 202)
             except ValueError:
                 resp = make_response({ "errors": ["Validation Errors"]}, 400)
 

@@ -26,6 +26,9 @@ metadata = MetaData(naming_convention={
     "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
 })
 
+AWS_ACCESS_KEY = 'LinkToInk'
+AWS_SECRET_KEY = 'Asf642Gsf!JKYTf258'
+
 bcrypt = Bcrypt(app)
 
 

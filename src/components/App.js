@@ -17,7 +17,7 @@ function App() {
 
     const currentProfile = users.filter(user => {
         if (loggedIn){
-        return user.username.includes(loggedIn.username)
+        return user.username == (loggedIn.username)
     } else {
         return null
     }
@@ -26,6 +26,7 @@ function App() {
     const userProfile = currentProfile.map((profile) => {
         return <Profile
             key={profile.id}
+            id={profile.id}
             username={profile.username}
             email={profile.email}
             avatar={profile.profilePic}
@@ -64,7 +65,7 @@ function App() {
                             <br />
                             <p>We provide an intuitive, all-in-one solution to simplify the process of connecting with the perfect tattoo artist, scheduling appointments and consultations, and a place for artists to foster opportunities for upcoming artists and apprentices to thrive in the industry.</p>
                             <br />
-                            <p> But…</p>
+                            <p><b> But…</b></p>
                             <br />
                             <p>Ink'd Up isn't just for clients finding the right artist, it's a virtual space where tattoo artists of all backgrounds, styles, and disciplines can come together to connect, collaborate, and find inspiration in the world of art.
                             </p>

@@ -38,12 +38,14 @@ function Registration({setLoggedIn}) {
 
             if (response.ok) {
                 const newUser = await response.json();
-                // onSignup(newUser); // Callback to handle successful signup
                 setMessage('Login successful. Redirecting to home...');
                 setLoggedIn(newUser)
                 setTimeout(() => {
                     history.push(`/account_home/${newUser.username}`); // After 2 seconds, navigate to the store profile page
                 }, 2000);
+                setTimeout(() => {
+                    window.location.reload()
+                }, 2000)
             } else {
                 const error = await response.json();
                 console.error('User signup failed:', error);

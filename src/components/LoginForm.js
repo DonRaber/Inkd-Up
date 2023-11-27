@@ -1,9 +1,13 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { useHistory } from "react-router-dom";
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 
 const LoginForm = () => {
+
+    const [message, setMessage] = useState('');
+
+
     const initialValues = {
         username: '',
         password: '',
@@ -28,7 +32,13 @@ const LoginForm = () => {
 
             if (response.ok) {
                 const user = await response.json();
+                setMessage('Loggin in, Redirecting to home...')
+                setTimeout(() => {
                 history.push(`/account_home/${user.username}`)
+                }, 2000)
+                setTimeout(() => {
+                    window.location.reload()
+                }, 2000)
             } else {
                 const error = await response.json();
                 console.error('Login failed:', error);
@@ -41,6 +51,8 @@ const LoginForm = () => {
     };
 
     return (
+        <div>
+            {message ? (<div>{message}</div>) :(
         <Formik
             initialValues={initialValues}
             validationSchema={validationSchema}
@@ -66,6 +78,8 @@ const LoginForm = () => {
                 </div>
             </Form>
         </Formik>
+        )}
+        </div>
     );
 };
 
