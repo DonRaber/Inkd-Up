@@ -3,15 +3,39 @@ import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import UserEdit from "./UserEdit";
 import ArtistEdit from "./ArtistEdit";
 import ShopEdit from "./ShopEdit";
+import ClientEdit from "./ClientEdit";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
 
-function ProfileManager({ loggedIn, setLoggedIn, setUsers, setArtists, setShops }) {
+function ProfileManager({ setUsers, setArtists, setShops, id, username, password, email, artistInfo, clientInfo, shopInfo, setClients }) {
     const [isUser, setIsUser] = useState(false)
     const [isClient, setIsClient] = useState(false)
     const [isArtist, setIsArtist] = useState(false)
     const [isShop, setIsShop] = useState(false)
 
-    console.log(loggedIn)
+
+    let client = []
+    if (Array.isArray(clientInfo) && clientInfo.length >= 1) {
+        client = clientInfo.map(client => {
+            return client.name
+    })} else {
+        client = false
+    } 
+
+    let artist = []
+    if (Array.isArray(artistInfo) && artistInfo.length >= 1) {
+        artist = artistInfo.map(artist => {
+            return artist.name
+    })} else {
+        artist = false
+    } 
+
+    let shop = []
+    if (Array.isArray(shopInfo) && shopInfo.length >= 1) {
+        shop = shopInfo.map(shop => {
+            return shop.name
+    })} else {
+        shop = false
+    }
 
     return (
         <div>
@@ -19,27 +43,31 @@ function ProfileManager({ loggedIn, setLoggedIn, setUsers, setArtists, setShops 
             <div>
             <button onClick={() => setIsUser(!isUser)} >Edit User</button>
                 { isUser ? (<UserEdit
-                    loggedIn={loggedIn}
-                    setLoggedIn={setLoggedIn}
+                    id={id}
+                    username={username}
+                    email={email}
+                    password={password}
                     setUsers={setUsers}
                 />) : null }
             </div>
-            <div>
+            {artist? <div>
             <button onClick={() => setIsArtist(!isArtist)} >Edit Artist</button>
                 { isArtist ? (<ArtistEdit
-                    loggedIn={loggedIn}
-                    setLoggedIn={setLoggedIn}
                     setArtists={setArtists}
                 />) : null }
-            </div>
-            <div>
+            </div>: <button>Setup Artist</button>}
+            {shop? <div>
             <button onClick={() => setIsShop(!isShop)} >Edit Shop</button>
                 { isShop ? (<ShopEdit
-                    loggedIn={loggedIn}
-                    setLoggedIn={setLoggedIn}
                     setShops={setShops}
                 />) : null }
-            </div>
+            </div>: <button>Setup Shop</button>}
+            {client? <div>
+            <button onClick={() => setIsClient(!isClient)} >Edit Client</button>
+                { isClient ? (<ClientEdit
+                    setClients={setClients}
+                />) : null }
+            </div>: <button>Setup Client</button>}
         </div>
     )
 }

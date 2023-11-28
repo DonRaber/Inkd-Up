@@ -36,6 +36,22 @@ function App() {
             shopInfo={profile.shop}
         />
     })
+    const profileEditor = currentProfile.map((profile) => {
+        return <ProfileManager
+            key={profile.id}
+            id={profile.id}
+            username={profile.username}
+            password={profile.password}
+            email={profile.email}
+            artistInfo={profile.artist}
+            clientInfo={profile.client}
+            shopInfo={profile.shop}
+            setUsers={setUsers}
+            setArtists={setArtists}
+            setShops={setShops}
+            setClients={setClients}
+        />
+    })
 
     // console.log(clients)
     console.log(artists)
@@ -101,13 +117,14 @@ function App() {
                     />
                 </Route>
                 <Route exact path='/profile_manager'>
-                    <ProfileManager
+                    {/* <ProfileManager
                         loggedIn={loggedIn}
                         setLoggedIn={setLoggedIn}
                         setUsers={setUsers}
                         setArtists={setArtists}
                         setShops={setShops}
-                    />
+                    /> */}
+                    {profileEditor}
                 </Route>
             </Switch>
         </div>

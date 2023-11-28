@@ -3,18 +3,17 @@ import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 
-function UserEdit({ loggedIn, setLoggedIn, setUsers }) {
+function UserEdit({ id, username, email, password, setUsers }) {
     const history = useHistory()
     const [message, setMessage] = useState('');
 
     const initialValues = {
-        username: `${loggedIn.username}`,
-        email: `${loggedIn.email}`,
-        password: `${loggedIn.password}`,
-        confirmPassword: `${loggedIn.password}`,
+        username: `${username}`,
+        email: `${email}`,
+        password: `${password}`,
+        confirmPassword: `${password}`,
     };
 
-    console.log(loggedIn.id)
 
     const validationSchema = Yup.object().shape({
         username: Yup.string().required('Required'),
@@ -24,11 +23,10 @@ function UserEdit({ loggedIn, setLoggedIn, setUsers }) {
             .oneOf([Yup.ref('password'), null], 'Passwords must match')
             .required('Required'),
     });
-    console.log(loggedIn.id)
     const handleSubmit = async (values, { setSubmitting }) => {
         console.log(values)
         try {
-            const response = await fetch(`/users/${loggedIn.id}`, {
+            const response = await fetch(`/users/${id}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -39,9 +37,11 @@ function UserEdit({ loggedIn, setLoggedIn, setUsers }) {
             if (response.ok) {
                 const updatedUser = await response.json();
                 setMessage('Update successful. Redirecting to home...');
-                setLoggedIn(updatedUser);
                 setTimeout(() => {
                     history.push(`/account_home/${updatedUser.username}`);
+                }, 2000);
+                setTimeout(() => {
+                    window.location.reload();
                 }, 2000);
             } else {
                 const error = await response.json();
@@ -118,7 +118,7 @@ function UserEdit({ loggedIn, setLoggedIn, setUsers }) {
                             </div>
                         </Form>
                     </Formik>
-                    <button on onClick={() => handleDeleteUser(loggedIn.id)}>Delete User</button>
+                    <button on onClick={() => handleDeleteUser(id)}>Delete User</button>
                 </div>
             )}
         </div>
