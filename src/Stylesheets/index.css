@@ -28,7 +28,8 @@
   cursor: pointer;
 }
 
-.preview_photo{
-    width: 120pt;
-    border-radius: 50%;
+.preview_photo {
+  width: 120pt;
+  height: 120pt;
+  border-radius: 50%;
 }

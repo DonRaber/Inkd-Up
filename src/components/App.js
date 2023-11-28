@@ -3,10 +3,11 @@ import React, { useState, useEffect } from "react";
 import Fetch from './Fetch';
 import LoginForm from './LoginForm';
 import AppointmentForm from './AppointmentForm';
-import Profile from './Profile';
 import ProfileManager from './ProfileManager';
 import Registration from './Registration';
 import Navbar from './NavBar';
+import ProfilePreview from './ProfilePreview';
+import Profile from './Profile';
 
 function App() {
     const [clients, setClients] = useState([])
@@ -24,7 +25,7 @@ function App() {
     })
 
     const userProfile = currentProfile.map((profile) => {
-        return <Profile
+        return <ProfilePreview
             key={profile.id}
             id={profile.id}
             username={profile.username}
@@ -36,11 +37,11 @@ function App() {
         />
     })
 
-    console.log(clients)
+    // console.log(clients)
     console.log(artists)
-    console.log(shops)
-    console.log(users)
-    console.log(loggedIn)
+    // console.log(shops)
+    // console.log(users)
+    // console.log(loggedIn)
     // console.log(currentProfile[0].artist.length)
 
     return (

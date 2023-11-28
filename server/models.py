@@ -2,8 +2,8 @@ from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.orm import validates
 from sqlalchemy.ext.hybrid import hybrid_property
-import boto3
 from botocore.exceptions import NoCredentialsError
+import boto3
 import re
 
 from config import db, bcrypt, AWS_ACCESS_KEY, AWS_SECRET_KEY
@@ -23,22 +23,25 @@ class User(db.Model, SerializerMixin):
 
     serialize_rules = ('-client.user', '-artist.user', '-shop.user')
 
-    def upload_profile_picture(self, file_path):
+    def upload_profile_picture(self, file):
         try:
             # Replace these values with your S3 bucket details
             S3_BUCKET = 'linkupinkup'
 
             s3 = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY, aws_secret_access_key=AWS_SECRET_KEY)
+            print(s3)
             # Generate a unique key for the S3 object (you might want to improve this logic)
-            s3_key = f"linkupinkup/{self.id}_{file_path.split('/')[-1]}"
-            
+            filename = f"{self.id}_{file.filename}"
+            s3_key = f"linkupinkup/{filename}"
+            print(f'S3 Key: {s3_key}')
             # Upload the file to S3
-            with open(file_path, 'rb') as file:
-                s3.upload_fileobj(file, S3_BUCKET, s3_key, ExtraArgs={'ACL': 'public-read'})
+            s3.upload_fileobj(file, S3_BUCKET, s3_key, ExtraArgs={'ACL': 'public-read'})
 
+            print('upload complete')
             # Update the profile picture URL for the user
             self.profilePic = f"https://{S3_BUCKET}.s3.amazonaws.com/{s3_key}"
 
+            print(self.profilePic)
             # Commit the changes to the database
             db.session.commit()
 

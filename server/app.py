@@ -139,11 +139,15 @@ def user_by_id(id):
 def upload_profile_picture():
     try:
         user_id = request.form.get('user_id')
-        user = User.query.get(user_id)
+        user = User.query.filter_by(id = user_id).first()
+        print(user_id)
+        print(user)
 
         if user:
             file = request.files['image']
+            print(file)
             uploaded_url = user.upload_profile_picture(file)
+            print('reached this point')
 
             if uploaded_url:
                 resp = make_response({'success': True, 'message': 'Profile picture uploaded successfully'}, 200)
