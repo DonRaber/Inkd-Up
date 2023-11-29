@@ -2,6 +2,7 @@ from flask import make_response, request, session
 from sqlalchemy.exc import IntegrityError
 from models import db, Client, Artist, Shop, Appointment, Picture, Review, User
 from config import db, app
+from datetime import datetime
 
 @app.route('/')
 def index():
@@ -330,7 +331,31 @@ def shop_by_user_id(user_id):
 @app.route('/appointments', methods = ['GET', 'POST', 'PATCH', 'DELETE'])
 def appointments():
     appointments = Appointment.query.all()
-    return make_response([appointment.to_dict(rules = ('-artist.pictures', '-artist.user', '-artist.reviews', '-client.reviews', '-client.user', '-shop.user')) for appointment in appointments], 200)
+        
+    if request.method == 'GET':
+            return make_response([appointment.to_dict(rules = ('-artist.pictures', '-artist.user', '-artist.reviews', '-client.reviews', '-client.user', '-shop.user')) for appointment in appointments], 200)
+
+    elif request.method == 'POST':
+        form_data = request.get_json()
+        print(form_data)
+        try:
+            appointment_date = datetime.strptime(form_data['date'], '%Y-%m-%d').date()
+            appointment_time = datetime.strptime(form_data['time'], '%H:%M').time()
+            print(f'Time: {appointment_time}')
+
+            new_appointment = Appointment(
+                date = appointment_date,
+                time = appointment_time,
+                artist_id = form_data['artist_id'],
+                client_id = form_data['client_id'],
+                shop_id = form_data['shop_id']
+            )
+            db.session.add(new_appointment)
+            db.session.commit()
+            resp = make_response(new_appointment.to_dict(rules=('-artist.pictures', '-artist.user', '-artist.reviews', '-client.reviews', '-client.user', '-shop.user')), 201)
+        except ValueError:
+            resp = make_response({'error': ['Validation Errors']}, 400)
+    return resp
 
 # -----------------------------------
 # PICTURES

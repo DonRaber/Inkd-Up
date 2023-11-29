@@ -14,7 +14,7 @@ function Registration({setLoggedIn}) {
         username: '',
         email: '',
         password: '',
-        confirmPassword: '', // New field for confirming the password
+        confirmPassword: '',
     };
 
     const validationSchema = Yup.object().shape({
@@ -41,7 +41,7 @@ function Registration({setLoggedIn}) {
                 setMessage('Login successful. Redirecting to home...');
                 setLoggedIn(newUser)
                 setTimeout(() => {
-                    history.push(`/account_home/${newUser.username}`); // After 2 seconds, navigate to the store profile page
+                    history.push(`/account_home/${newUser.username}`);
                 }, 2000);
                 setTimeout(() => {
                     window.location.reload()

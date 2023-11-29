@@ -3,22 +3,20 @@ import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 
-function ClientEdit({ loggedIn, setLoggedIn }) {
+function ArtistEdit({ id, username, clientInfo }) {
     const history = useHistory()
     const [message, setMessage] = useState('');
 
     const initialValues = {
-        name: `${loggedIn.artist[0].name}`,
+        name: `${clientInfo[0].name}`,
     };
-
-    console.log(loggedIn.id)
 
     const validationSchema = Yup.object().shape({
         name: Yup.string().required('Required'),
     });
     const handleSubmit = async (values, { setSubmitting }) => {
         try {
-            const response = await fetch(`/client/user_${loggedIn.id}`, {
+            const response = await fetch(`/clients/user_${id}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -27,11 +25,12 @@ function ClientEdit({ loggedIn, setLoggedIn }) {
             });
 
             if (response.ok) {
-                const updatedUser = await response.json();
                 setMessage('Update successful. Redirecting to home...');
-                setLoggedIn(updatedUser);
                 setTimeout(() => {
-                    history.push(`/account_home/${updatedUser.username}`);
+                    history.push(`/account_home/${username}`);
+                }, 2000);
+                setTimeout(() => {
+                    window.location.reload();
                 }, 2000);
             } else {
                 const error = await response.json();
@@ -45,14 +44,14 @@ function ClientEdit({ loggedIn, setLoggedIn }) {
     }
 
 
-    function handleDeleteArtist(id) {
-        fetch(`/client/user_${id}`, { method: "DELETE" }).then((resp) => {
+    function handleDeleteClient(id) {
+        fetch(`/clients/user_${id}`, { method: "DELETE" }).then((resp) => {
             console.log(resp)
             if (resp.ok) {
-                setArtists((artists) =>
-                    artists.filter((artist) => artist.user_id !== id)
+                setClients((clients) =>
+                    clients.filter((client) => client.user_id !== id)
                 );
-                alert(`Client: ${artist.name} Deleted!`)
+                alert(`Artist: ${client.name} Deleted!`)
                 history.push('/')
             }
         });
@@ -62,7 +61,7 @@ function ClientEdit({ loggedIn, setLoggedIn }) {
     return (
         <div>
             <div>
-                <h1>Edit Artist Here</h1>
+                <h1>Edit Client Here</h1>
             </div>
 
             {message ? (
@@ -71,7 +70,7 @@ function ClientEdit({ loggedIn, setLoggedIn }) {
                 </div>
             ) : (
                 <div>
-                    <div>Edit Artist Info: </div>
+                    <div>Edit Client Info: </div>
                     <Formik
                         initialValues={initialValues}
                         validationSchema={validationSchema}
@@ -80,9 +79,9 @@ function ClientEdit({ loggedIn, setLoggedIn }) {
                         <Form>
                             <br />
                             <div>
-                                <label htmlFor="Name">Name:</label>
-                                <Field type="text" id="Name" name="Name" />
-                                <ErrorMessage name="Name" component="div" />
+                                <label htmlFor="name">Name:</label>
+                                <Field type="text" id="name" name="name" />
+                                <ErrorMessage name="name" component="div" />
                             </div>
                             <br />
                             <div>
@@ -90,11 +89,11 @@ function ClientEdit({ loggedIn, setLoggedIn }) {
                             </div>
                         </Form>
                     </Formik>
-                    <button on onClick={() => handleDeleteArtist(loggedIn.id)}>Delete Artist</button>
+                    <button on onClick={() => handleDeleteClient(loggedIn.id)}>Delete Artist</button>
                 </div>
             )}
         </div>
     )
 }
 
-export default ClientEdit
+export default ArtistEdit

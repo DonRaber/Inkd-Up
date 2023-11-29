@@ -3,23 +3,25 @@ import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 
-function ShopEdit({ loggedIn, setLoggedIn, setShops }) {
+function ShopEdit({ id, username, shopInfo, setShops }) {
     const history = useHistory()
     const [message, setMessage] = useState('');
+    console.log(shopInfo[0].location)
 
     const initialValues = {
-        name: `${loggedIn.shop[0].name}`,
+        name: `${shopInfo[0].name}`,
+        location: `${shopInfo[0].location}`,
     };
 
-    console.log(loggedIn.shop)
 
     const validationSchema = Yup.object().shape({
         name: Yup.string().required('Required'),
+        location: Yup.string().required('Required'),
     });
     const handleSubmit = async (values, { setSubmitting }) => {
         console.log(values)
         try {
-            const response = await fetch(`/shops/user_${loggedIn.id}`, {
+            const response = await fetch(`/shops/user_${id}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -30,16 +32,18 @@ function ShopEdit({ loggedIn, setLoggedIn, setShops }) {
             if (response.ok) {
                 const updatedUser = await response.json();
                 setMessage('Update successful. Redirecting to home...');
-                setLoggedIn(updatedUser);
                 setTimeout(() => {
-                    history.push(`/account_home/${updatedUser.username}`);
+                    history.push(`/account_home/${username}`);
+                }, 2000);
+                setTimeout(() => {
+                    window.location.reload();
                 }, 2000);
             } else {
                 const error = await response.json();
-                console.error('User update failed:', error);
+                console.error('Artist update failed:', error);
             }
         } catch (error) {
-            console.error('Error during User update:', error);
+            console.error('Error during Artist update:', error);
         }
 
         setSubmitting(false);
@@ -47,13 +51,13 @@ function ShopEdit({ loggedIn, setLoggedIn, setShops }) {
 
 
     function handleDeleteShop(id) {
-        fetch(`/shops/user_${id}`, { method: "DELETE" }).then((resp) => {
+        fetch(`/shops/${id}`, { method: "DELETE" }).then((resp) => {
             console.log(resp)
             if (resp.ok) {
-                setShops((shops) =>
-                    shops.filter((shop) => shop.user_id !== id)
+                setShops((shopArr) =>
+                    shopArr.filter((shop) => shop.id !== id)
                 );
-                alert(`shop: ${shop.name} Deleted!`)
+                alert(`shop ${shopInfo[0].name} Deleted!`)
                 history.push('/')
             }
         });
@@ -63,7 +67,7 @@ function ShopEdit({ loggedIn, setLoggedIn, setShops }) {
     return (
         <div>
             <div>
-                <h1>Edit shop Here</h1>
+                <h1>Edit Shop Here</h1>
             </div>
 
             {message ? (
@@ -72,7 +76,7 @@ function ShopEdit({ loggedIn, setLoggedIn, setShops }) {
                 </div>
             ) : (
                 <div>
-                    <div>Edit Shop Info: </div>
+                    <div>Edit Account: </div>
                     <Formik
                         initialValues={initialValues}
                         validationSchema={validationSchema}
@@ -81,15 +85,15 @@ function ShopEdit({ loggedIn, setLoggedIn, setShops }) {
                         <Form>
                             <br />
                             <div>
-                                <label htmlFor="Name">Name:</label>
-                                <Field type="text" id="Name" name="Name" />
-                                <ErrorMessage name="Name" component="div" />
+                                <label htmlFor="name">Name:</label>
+                                <Field type="text" id="name" name="name" />
+                                <ErrorMessage name="name" component="div" />
                             </div>
                             <br />
                             <div>
                                 <label htmlFor="location">Location:</label>
-                                <Field type="text" id="Location" location="Location" />
-                                <ErrorMessage location="Location" component="div" />
+                                <Field type="location" id="location" name="location" />
+                                <ErrorMessage name="location" component="div" />
                             </div>
                             <br />
                             <div>
@@ -97,7 +101,7 @@ function ShopEdit({ loggedIn, setLoggedIn, setShops }) {
                             </div>
                         </Form>
                     </Formik>
-                    <button on onClick={() => handleDeleteShop(loggedIn.id)}>Delete shop</button>
+                    <button on onClick={() => handleDeleteShop(id)}>Delete User</button>
                 </div>
             )}
         </div>

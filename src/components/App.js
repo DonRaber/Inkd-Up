@@ -1,5 +1,5 @@
 import { Route, Switch } from 'react-router-dom';
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Fetch from './Fetch';
 import LoginForm from './LoginForm';
 import AppointmentForm from './AppointmentForm';
@@ -18,7 +18,7 @@ function App() {
 
     const currentProfile = users.filter(user => {
         if (loggedIn){
-        return user.username == (loggedIn.username)
+        return user.username === (loggedIn.username)
     } else {
         return null
     }
@@ -53,16 +53,14 @@ function App() {
         />
     })
 
-    // console.log(clients)
+    console.log(clients)
     console.log(artists)
     // console.log(shops)
     // console.log(users)
-    // console.log(loggedIn)
-    // console.log(currentProfile[0].artist.length)
+    console.log(loggedIn)
 
     return (
         <div>
-            {/* <img id='logo' src='./Inkd_Up_logo.jpeg' alt='Inkd Up' /> */}
             <Navbar />
             <Fetch
                 setClients={setClients}
@@ -102,28 +100,19 @@ function App() {
                     {userProfile}
                 </Route>
                 <Route exact path='/user_profile/:username'>
-                    <h1>User Profile by Username</h1>
-                    <Profile artists={artists} />
+                    <Profile artists={artists} loggedIn={loggedIn} shops={shops} />
                 </Route>
                 <Route exact path='/profile_editor'>
                     <h1>Edit account info : Patch Request to Login info or Account Info(Patch request for Specific Profile Type)</h1>
                 </Route>
-                <Route exact path='/book_appointment'>
+                <Route exact path='/user_profile/:username/book_appointment'>
                     <h1>Appointment Registration Form</h1>
                     <AppointmentForm
                         loggedIn={loggedIn}
-                        artists={artists}
                         shops={shops}
                     />
                 </Route>
                 <Route exact path='/profile_manager'>
-                    {/* <ProfileManager
-                        loggedIn={loggedIn}
-                        setLoggedIn={setLoggedIn}
-                        setUsers={setUsers}
-                        setArtists={setArtists}
-                        setShops={setShops}
-                    /> */}
                     {profileEditor}
                 </Route>
             </Switch>

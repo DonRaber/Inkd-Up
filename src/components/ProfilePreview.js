@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import ProfileCard from "./ProfileCard";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
@@ -6,7 +6,6 @@ import ImageChanger from "./ImageChanger";
 
 
 function ProfilePreview({ id, username, email, avatar, artistInfo, clientInfo, shopInfo }) {
-    const [edit, setEdit] = useState(false)
     const history = useHistory()
 
     console.log(artistInfo)

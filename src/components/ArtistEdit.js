@@ -3,22 +3,20 @@ import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 
-function ArtistEdit({ loggedIn, setLoggedIn }) {
+function ArtistEdit({ id, username, artistInfo, setArtists }) {
     const history = useHistory()
     const [message, setMessage] = useState('');
 
     const initialValues = {
-        name: `${loggedIn.artist[0].name}`,
+        name: `${artistInfo[0].name}`,
     };
-
-    console.log(loggedIn.id)
 
     const validationSchema = Yup.object().shape({
         name: Yup.string().required('Required'),
     });
     const handleSubmit = async (values, { setSubmitting }) => {
         try {
-            const response = await fetch(`/artists/user_${loggedIn.id}`, {
+            const response = await fetch(`/artists/user_${id}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -27,11 +25,12 @@ function ArtistEdit({ loggedIn, setLoggedIn }) {
             });
 
             if (response.ok) {
-                const updatedUser = await response.json();
                 setMessage('Update successful. Redirecting to home...');
-                setLoggedIn(updatedUser);
                 setTimeout(() => {
-                    history.push(`/account_home/${updatedUser.username}`);
+                    history.push(`/account_home/${username}`);
+                }, 2000);
+                setTimeout(() => {
+                    window.location.reload();
                 }, 2000);
             } else {
                 const error = await response.json();
@@ -80,9 +79,9 @@ function ArtistEdit({ loggedIn, setLoggedIn }) {
                         <Form>
                             <br />
                             <div>
-                                <label htmlFor="Name">Name:</label>
-                                <Field type="text" id="Name" name="Name" />
-                                <ErrorMessage name="Name" component="div" />
+                                <label htmlFor="name">Name:</label>
+                                <Field type="text" id="name" name="name" />
+                                <ErrorMessage name="name" component="div" />
                             </div>
                             <br />
                             <div>
