@@ -51,7 +51,7 @@ const LoginForm = () => {
     };
 
     return (
-        <div>
+        <div id='login'>
             {message ? (<div>{message}</div>) :(
         <Formik
             initialValues={initialValues}
@@ -74,7 +74,7 @@ const LoginForm = () => {
                 <br />
                 <div>
 
-                    <button type="submit">Login</button>
+                    <button className="submit_button" id='login_button' type="submit">Login</button>
                 </div>
             </Form>
         </Formik>

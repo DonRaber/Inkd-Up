@@ -28,8 +28,8 @@ const ImageChanger = ({ handleAvatarChange, avatar }) => {
     };
 
     return (
-        <div>
-            <button onClick={() => setModalIsOpen(true)}>Update Image</button>
+        <div id='edit_image_div'>
+            <button className="submit_button" onClick={() => setModalIsOpen(true)}>Update Image</button>
             <Modal
                 isOpen={modalIsOpen}
                 onRequestClose={() => setModalIsOpen(false)}
@@ -38,7 +38,7 @@ const ImageChanger = ({ handleAvatarChange, avatar }) => {
                 {/* Add your image selection UI here */}
                 <input type="file" onChange={(e) => handlePatchRequest(e.target.files)} />
                 {previewUrl && <img src={previewUrl} alt="Selected Preview" />}
-                <button onClick={() => setModalIsOpen(false)}>Close</button>
+                <button className="submit_button" onClick={() => setModalIsOpen(false)}>Close</button>
             </Modal>
         </div>
     )

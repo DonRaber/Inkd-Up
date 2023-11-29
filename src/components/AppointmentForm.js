@@ -79,7 +79,7 @@ function AppointmentForm({ loggedIn, currentArtist, shops }) {
                             </Field>
                             <ErrorMessage name='shop_id' component='div' />
                         </div>
-                        <button type='submit'>Confirm Appointment</button>
+                        <button className="submit_button" type='submit'>Confirm Appointment</button>
                     </Form>
                 </Formik>
             ) : (

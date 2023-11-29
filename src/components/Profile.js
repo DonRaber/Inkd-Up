@@ -32,7 +32,7 @@ function Profile({ artists, loggedIn, shops }) {
             )}
         </div>
         <Calendar appointments={appointments} />
-        <button onClick={() => setToggleAppt(!toggleAppt)} >Set Appointment</button>
+        <button className="submit_button" onClick={() => setToggleAppt(!toggleAppt)} >Set Appointment</button>
         {toggleAppt ? <AppointmentForm currentArtist={currentArtist} loggedIn={loggedIn} shops={shops} />: null}
     </div>
     )

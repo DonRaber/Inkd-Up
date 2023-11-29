@@ -59,12 +59,13 @@ function Registration({setLoggedIn}) {
 
     return (
         <div>
+            <h1 className="title">Register For new Account</h1>
             {message ? (
                 <div>
                     <div>{message}</div>
                 </div>
             ) : (
-                <div>
+                <div id="registration">
                     <div>Register User: </div>
                     <Formik
                         initialValues={initialValues}
@@ -98,7 +99,7 @@ function Registration({setLoggedIn}) {
                             </div>
                             <br />
                             <div>
-                                <button type="submit">Sign Up</button>
+                                <button className="submit_button" type="submit">Sign Up</button>
                             </div>
                         </Form>
                     </Formik>

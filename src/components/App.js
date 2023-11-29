@@ -91,7 +91,6 @@ function App() {
                     <LoginForm users={users} setLoggedIn={setLoggedIn} />
                 </Route>
                 <Route exact path='/registration'>
-                    <h1>Register For new Account</h1>
                     <Registration
                         setLoggedIn={setLoggedIn}
                     />
