@@ -65,7 +65,7 @@ function ShopEdit({ id, username, shopInfo, setShops }) {
 
 
     return (
-        <div>
+        <div className="registration" >
             <div>
                 <h1>Edit Shop Here</h1>
             </div>

@@ -180,6 +180,7 @@ def clients():
         try:
             new_client = Client(
                 name = form_data['name'],
+                user_id = form_data['user_id']
             )
             db.session.add(new_client)
             db.session.commit()
@@ -205,6 +206,19 @@ def client_by_user_id(user_id):
                 resp = make_response(client_by_user_id.to_dict(), 202)
             except ValueError:
                 resp = make_response({ "errors": ["Validation Errors"]}, 400)
+
+
+        elif request.method == 'POST':
+            form_data = request.get_json()
+            try:
+                new_client = Client(
+                    name = form_data['name'],
+                )
+                db.session.add(new_client)
+                db.session.commit()
+                resp = make_response(new_client.to_dict(), 201)
+            except ValueError:
+                resp = make_response({'error': ['Validation Errors']}, 400)
 
 # ---------------- DELETE -----------------------
 
@@ -233,6 +247,7 @@ def artists():
         try:
             new_artist = Artist(
                 name = form_data['name'],
+                user_id = form_data['user_id']
             )
             db.session.add(new_artist)
             db.session.commit()
@@ -258,6 +273,18 @@ def artist_by_user_id(user_id):
                 resp = make_response(artist_by_user_id.to_dict(), 202)
             except ValueError:
                 resp = make_response({ "errors": ["Validation Errors"]}, 400)
+
+        elif request.method == 'POST':
+            form_data = request.get_json()
+            try:
+                new_artist = Artist(
+                    name = form_data['name'],
+            )
+                db.session.add(new_artist)
+                db.session.commit()
+                resp = make_response(new_artist.to_dict(), 201)
+            except ValueError:
+                resp = make_response({'error': ['Validation Errors']}, 400)
 
 # ---------------- DELETE -----------------------
 
@@ -286,7 +313,8 @@ def shops():
         try:
             new_shop = Shop(
                 name = form_data['name'],
-                location = form_data['location']
+                location = form_data['location'],
+                user_id = form_data['user_id']
             )
             db.session.add(new_shop)
             db.session.commit()
@@ -312,6 +340,19 @@ def shop_by_user_id(user_id):
                 resp = make_response(shop_by_user_id.to_dict(), 202)
             except ValueError:
                 resp = make_response({ "errors": ["Validation Errors"]}, 400)
+
+        elif request.method == 'POST':
+            form_data = request.get_json()
+            try:
+                new_shop = Shop(
+                    name = form_data['name'],
+                    location = form_data['location']
+                )
+                db.session.add(new_shop)
+                db.session.commit()
+                resp = make_response(new_shop.to_dict(), 201)
+            except ValueError:
+                resp = make_response({'error': ['Validation Errors']}, 400)
 
 # ---------------- DELETE -----------------------
 

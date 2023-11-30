@@ -67,7 +67,7 @@ function ArtistEdit({ id, username, clientInfo }) {
 // JSX
 
     return (
-        <div>
+        <div className="registration" >
             <div>
                 <h1>Edit Client Here</h1>
             </div>

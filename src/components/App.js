@@ -9,7 +9,7 @@ import Navbar from './NavBar';
 import ProfilePreview from './ProfilePreview';
 import Profile from './Profile';
 import Search from './Search';
-import { useTheme } from './ThemContext';
+import { useTheme } from '../ThemContext';
 
 function App() {
 
@@ -77,7 +77,7 @@ function App() {
                 fontFamily: 'Kaushan Script, cursive',
             }}
         >
-            <div>
+            <div id='main_page'>
                 <Navbar loggedIn={loggedIn} />
                 <Fetch
                     setClients={setClients}

@@ -59,7 +59,7 @@ function ArtistEdit({ id, username, artistInfo, setArtists }) {
 
 
     return (
-        <div>
+        <div className="registration">
             <div>
                 <h1>Edit Artist Here</h1>
             </div>

@@ -70,7 +70,7 @@ function UserEdit({ id, username, email, password, setUsers }) {
 
 
     return (
-        <div>
+        <div className="registration" >
             <div>
                 <h1>Edit Info Here</h1>
             </div>
