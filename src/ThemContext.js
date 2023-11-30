@@ -10,7 +10,7 @@ export const ThemeProvider = ({ children }) => {
     const [backgroundColor, setBackgroundColor] = useState('teal');
 
     const toggleBackgroundColor = () => {
-        setBackgroundColor((prevColor) => (prevColor === 'teal' ? 'orange' : 'teal'));
+        setBackgroundColor((prevColor) => (prevColor === 'teal' ? 'rebeccapurple' : 'teal'));
     }
 
     return (

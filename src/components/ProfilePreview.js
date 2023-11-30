@@ -87,6 +87,9 @@ function ProfilePreview({ id, username, email, avatar, artistInfo, clientInfo, s
 
             const data = await response.json()
             console.log('Upload successful:', data)
+            setTimeout(() => {
+                window.location.reload()
+            }, 2000)
         } catch (error) {
             console.error('Error during upload:', error.message)
         }
