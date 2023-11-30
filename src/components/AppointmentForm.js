@@ -4,19 +4,24 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from 'yup';
 
 function AppointmentForm({ loggedIn, currentArtist, shops }) {
+
+// VALUES AND SCHEMA
+
     const initialValues = {
         date: '',
         time: '',
         shop_id: '', 
     };
-
     const history = useHistory();
+
 
     const validationSchema = Yup.object({
         date: Yup.date().required('Date is required'),
         time: Yup.string().required('Time is required'),
         shop_id: Yup.string().required('Shop is required'),
     });
+
+// EVENT HANDLERS
 
     const submitAppointment = async (values, { setSubmitting }) => {
         console.log(values)
@@ -33,7 +38,7 @@ function AppointmentForm({ loggedIn, currentArtist, shops }) {
                     client_id: loggedIn.client[0].id,
                     shop_id: values.shop_id,
                 }),
-            });
+            })
 
             if (response.ok) {
                 await response.json();
@@ -47,7 +52,9 @@ function AppointmentForm({ loggedIn, currentArtist, shops }) {
         } finally {
             setSubmitting(false);
         }
-    };
+    }
+
+// JSX
 
     return (
         <div>

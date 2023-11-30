@@ -6,12 +6,12 @@ import ImageChanger from "./ImageChanger";
 
 
 function ProfilePreview({ id, username, email, avatar, artistInfo, clientInfo, shopInfo }) {
+
+// HISTORY
+
     const history = useHistory()
 
-    console.log(artistInfo)
-    console.log(clientInfo)
-    console.log(shopInfo)
-
+// CONDITIONAL FILTER/MAP DETERMINING IF CLIENT ARTIST OR SHOP EXISTS WITH USER
 
     let client = []
     if (Array.isArray(clientInfo) && clientInfo.length >= 1) {
@@ -40,6 +40,8 @@ function ProfilePreview({ id, username, email, avatar, artistInfo, clientInfo, s
         shop = false
     }
 
+// LOGOUT
+
     const handleLogout = async () => {
         try {
             const response = await fetch('/logout', {
@@ -54,22 +56,24 @@ function ProfilePreview({ id, username, email, avatar, artistInfo, clientInfo, s
                     window.location.reload()
                 }, 1)
             } else {
-                console.error('Logout failed');
+                console.error('Logout failed')
             }
         } catch (error) {
-            console.error('Error during logout:', error);
+            console.error('Error during logout:', error)
         }
     }
 
+// PROFILE IMAGE UPDATER
+
     const handleAvatarChange = async (currentAvatar, newImage) => {
         const userId = id
-        const apiUrl = '/upload_profile_picture';
+        const apiUrl = '/upload_profile_picture'
 
         console.log(newImage)
 
-        const formData = new FormData();
-        formData.append('user_id', userId);
-        formData.append('image', newImage);
+        const formData = new FormData()
+        formData.append('user_id', userId)
+        formData.append('image', newImage)
 
         try {
             const response = await fetch(apiUrl, {
@@ -78,19 +82,19 @@ function ProfilePreview({ id, username, email, avatar, artistInfo, clientInfo, s
             });
 
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                throw new Error('Network response was not ok')
             }
 
-            const data = await response.json();
-            console.log('Upload successful:', data);
+            const data = await response.json()
+            console.log('Upload successful:', data)
         } catch (error) {
-            console.error('Error during upload:', error.message);
+            console.error('Error during upload:', error.message)
         }
 
-        console.log('PATCH request with new image:', newImage);
+        console.log('PATCH request with new image:', newImage)
     }
 
-
+// JSX
 
     return (
         <div id="profile_preview">

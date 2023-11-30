@@ -1,14 +1,14 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 
-function Registration({setLoggedIn}) {
+function Registration({ setLoggedIn }) {
+
+// USE STATE AND VALIDATION
 
     const history = useHistory()
     const [message, setMessage] = useState('');
-
-
 
     const initialValues = {
         username: '',
@@ -24,7 +24,9 @@ function Registration({setLoggedIn}) {
         confirmPassword: Yup.string()
             .oneOf([Yup.ref('password'), null], 'Passwords must match')
             .required('Required'),
-    });
+    })
+
+    // SUBMIT REGISTRATION FORM
 
     const handleSubmit = async (values, { setSubmitting }) => {
         try {
@@ -37,25 +39,27 @@ function Registration({setLoggedIn}) {
             })
 
             if (response.ok) {
-                const newUser = await response.json();
-                setMessage('Login successful. Redirecting to home...');
+                const newUser = await response.json()
+                setMessage('Login successful. Redirecting to home...')
                 setLoggedIn(newUser)
                 setTimeout(() => {
-                    history.push(`/account_home/${newUser.username}`);
+                    history.push(`/account_home/${newUser.username}`)
                 }, 2000);
                 setTimeout(() => {
                     window.location.reload()
                 }, 2000)
             } else {
-                const error = await response.json();
-                console.error('User signup failed:', error);
+                const error = await response.json()
+                console.error('User signup failed:', error)
             }
         } catch (error) {
-            console.error('Error during User signup:', error);
+            console.error('Error during User signup:', error)
         }
 
         setSubmitting(false);
     }
+
+    // JSX
 
     return (
         <div>

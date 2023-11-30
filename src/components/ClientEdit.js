@@ -4,16 +4,22 @@ import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 
 function ArtistEdit({ id, username, clientInfo }) {
+
+// VARAIABLES AND VALIDATION SCHEMA
+
     const history = useHistory()
-    const [message, setMessage] = useState('');
+    const [message, setMessage] = useState('')
 
     const initialValues = {
         name: `${clientInfo[0].name}`,
-    };
+    }
 
     const validationSchema = Yup.object().shape({
         name: Yup.string().required('Required'),
-    });
+    })
+
+// SUMBIT PATCH REQUEST
+
     const handleSubmit = async (values, { setSubmitting }) => {
         try {
             const response = await fetch(`/clients/user_${id}`, {
@@ -25,24 +31,25 @@ function ArtistEdit({ id, username, clientInfo }) {
             });
 
             if (response.ok) {
-                setMessage('Update successful. Redirecting to home...');
+                setMessage('Update successful. Redirecting to home...')
                 setTimeout(() => {
-                    history.push(`/account_home/${username}`);
+                    history.push(`/account_home/${username}`)
                 }, 2000);
                 setTimeout(() => {
-                    window.location.reload();
+                    window.location.reload()
                 }, 2000);
             } else {
-                const error = await response.json();
-                console.error('User update failed:', error);
+                const error = await response.json()
+                console.error('User update failed:', error)
             }
         } catch (error) {
-            console.error('Error during User update:', error);
+            console.error('Error during User update:', error)
         }
 
-        setSubmitting(false);
+        setSubmitting(false)
     }
 
+// DELETE CLIENT
 
     function handleDeleteClient(id) {
         fetch(`/clients/user_${id}`, { method: "DELETE" }).then((resp) => {
@@ -57,6 +64,7 @@ function ArtistEdit({ id, username, clientInfo }) {
         });
     }
 
+// JSX
 
     return (
         <div>

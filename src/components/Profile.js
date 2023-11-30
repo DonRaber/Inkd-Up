@@ -4,15 +4,16 @@ import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 import AppointmentForm from "./AppointmentForm";
 
 function Profile({ artists, loggedIn, shops }) {
+
+// USE STATE AND PARAMS
+
     const { username } = useParams()
     const [toggleAppt, setToggleAppt] = useState(false)
-    console.log(username)
-    console.log(artists)
     const currentArtist = artists.find((artist) => artist.user.username === username);
-    console.log(currentArtist)
 
-    // Extract appointments for the current artist
     const appointments = currentArtist ? currentArtist.appointments || []: [];
+
+// JSX
 
     return (<div>
         <h1>{username}</h1>
@@ -22,7 +23,6 @@ function Profile({ artists, loggedIn, shops }) {
                 <ul>
                     {appointments.map((appointment) => (
                         <li key={appointment.id}>
-                            {/* Display appointment details */}
                             Date: {appointment.date}, Time: {appointment.time}
                         </li>
                     ))}

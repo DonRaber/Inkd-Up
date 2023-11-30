@@ -1,13 +1,42 @@
 body {
-  background-image: url('/public/Inkd_Up-logos_white.png');
+  /* background-image: url('/public/Inkd_Up-logos_white.png'); */
   background-size: cover;
   background-position: center center;
   margin: 0;
   height: 100vh;
   align-items: center;
   justify-content: center;
-  background-color: teal;
   font-family: 'Kaushan Script', cursive;
+}
+
+.app-container {
+  background-image: url('/public/Inkd_Up-logos_white.png'); /* Replace with your image path */
+  background-size: cover;
+  margin: 0;
+  height: 100vh;
+  background-position: center center;
+}
+
+.app-container::before {
+  background-image: url('/public/Inkd_Up-logos_white.png');
+  content: '';
+  margin: 0;
+  height: 100%;
+  align-items: center;
+  background-position: center center;
+  background-size: cover;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: inherit; /* Inherit the color from the context */
+}
+
+#background_button {
+  top: 0;
+  right: 0;
+  position: fixed;
 }
 
 button{
@@ -17,7 +46,7 @@ button{
 #logo {
   width: 150px;
   height: auto;
-  position: relative;
+  position: fixed;
   top: 0px;
   left: 0px;
 }
@@ -25,8 +54,8 @@ button{
 #overview_container {
   width: 50%;
   margin: 0 auto;
-  margin-top: 200px;
-  background-color: rgba(128, 128, 128, .5);
+  margin-top: 75px;
+  background-color: rgba(128, 128, 128, .7);
   border: double red;
   position: absolute;
   top: 50%;
@@ -34,24 +63,6 @@ button{
   transform: translate(-50%, -50%);
 }
 
-.profile_card {
-  width: 250px;
-  margin: 0 auto;
-  border: 1px solid red;
-  border-radius: 15px;
-  padding: 10px;
-  /* margin-right: 10px;
-  margin-bottom: 10px; */
-  height: 250px;
-  padding: 5px;
-  background-color: rgba(168, 42, 42, 0.95);
-  background-image: url('/public/Inkd_Up-logos_black.png');
-  background-size: cover;
-  transition: transform 0.7s;
-  /* Animation */
-  perspective: 220px;
-  cursor: pointer;
-}
 
 .preview_photo {
   width: 120pt;
@@ -60,9 +71,15 @@ button{
 }
 
 .calendar-container {
+  border: double black;
+  width: 35%;
   display: grid;
   grid-template-rows: auto auto;
   gap: 10px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .calendar-header {
@@ -103,6 +120,8 @@ button{
 #navarea {
   width: 200px;
   height: auto;
+  top: 0px;
+  left: 0px;
 }
 
 #navbar {
@@ -113,10 +132,10 @@ button{
   display:flex;
   flex-direction: column;
   justify-content: space-between;
-  position: relative;
+  position: absolute;
   z-index: 1;
   background-color: rgb(175, 193, 197);
-  top: 0px;
+  top: 35px;
   left: 0px;
   overflow-x: hidden;
   transition: 1s;
@@ -228,4 +247,42 @@ button{
   margin: 20px auto;
   width: 75%;
   text-align: center;
+}
+
+#search_results {
+  margin-top: 8%;
+  display: flex;
+  width: 75%;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -40%);
+}
+
+.profile_card {
+  width: 250px;
+  margin: 0 auto;
+  border: 1px solid red;
+  border-radius: 15px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 250px;
+  padding: 5px;
+  background-color: rgba(168, 42, 42, 0.95);
+  background-image: url('/public/Inkd_Up-logos_black.png');
+  background-size: cover;
+  transition: transform 0.7s;
+  perspective: 220px;
+  cursor: pointer;
+}
+
+#file_loader {
+  width: 30%;
+  height: 50%;
+  background-color: rgba(128, 128, 128);
 }

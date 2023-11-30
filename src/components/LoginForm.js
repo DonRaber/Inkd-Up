@@ -5,6 +5,8 @@ import * as Yup from 'yup';
 
 const LoginForm = () => {
 
+// USE STATE AND VALIDATION SCHEMA
+
     const [message, setMessage] = useState('');
 
 
@@ -17,7 +19,9 @@ const LoginForm = () => {
     const validationSchema = Yup.object().shape({
         username: Yup.string().required('Required'),
         password: Yup.string().required('Required'),
-    });
+    })
+
+// SUBMIT LOGIN FORM
 
     const handleSubmit = async (values, { setSubmitting }) => {
         try {
@@ -40,15 +44,17 @@ const LoginForm = () => {
                     window.location.reload()
                 }, 2000)
             } else {
-                const error = await response.json();
-                console.error('Login failed:', error);
+                const error = await response.json()
+                console.error('Login failed:', error)
             }
         } catch (error) {
-            console.error('Error during login:', error);
+            console.error('Error during login:', error)
         }
 
-        setSubmitting(false);
-    };
+        setSubmitting(false)
+    }
+
+// JSX
 
     return (
         <div id='login'>
@@ -80,7 +86,7 @@ const LoginForm = () => {
         </Formik>
         )}
         </div>
-    );
-};
+    )
+}
 
 export default LoginForm;

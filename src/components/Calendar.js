@@ -1,40 +1,45 @@
 import React, { useState } from "react";
 
 const Calendar = ({ appointments }) => {
-    const [date, setDate] = useState(new Date());
-    const [selectedDay, setSelectedDay] = useState(null);
+
+// USE STATE AND VARIABLES
+
+    const [date, setDate] = useState(new Date())
+    const [selectedDay, setSelectedDay] = useState(null)
 
     const daysInMonth = (month, year) => {
-        return new Date(year, month + 1, 0).getDate();
-    };
+        return new Date(year, month + 1, 0).getDate()
+    }
 
     const startOfMonth = () => {
-        return new Date(date.getFullYear(), date.getMonth(), 1).getDay();
-    };
+        return new Date(date.getFullYear(), date.getMonth(), 1).getDay()
+    }
+
+// GENERATE CALENDAR
 
     const generateCalendar = () => {
-        const totalDays = daysInMonth(date.getMonth(), date.getFullYear());
-        const startDay = startOfMonth();
+        const totalDays = daysInMonth(date.getMonth(), date.getFullYear())
+        const startDay = startOfMonth()
 
-        const calendar = [];
-        let day = 1;
+        const calendar = []
+        let day = 1
 
         for (let i = 0; i < startDay; i++) {
-            calendar.push(<div key={`empty-${i}`} className="empty-cell"></div>);
+            calendar.push(<div key={`empty-${i}`} className="empty-cell"></div>)
         }
 
         for (let i = 1; i <= totalDays; i++) {
-            const currentDate = new Date(date.getFullYear(), date.getMonth(), i);
+            const currentDate = new Date(date.getFullYear(), date.getMonth(), i)
             const isAppointmentDay = appointments.some((appointment) => {
                 const appointmentDate = new Date(appointment.date);
                 return (
                     appointmentDate.getFullYear() === currentDate.getFullYear() &&
                     appointmentDate.getMonth() === currentDate.getMonth() &&
                     appointmentDate.getDate() === currentDate.getDate()
-                );
-            });
+                )
+            })
 
-            const isSelected = selectedDay === i;
+            const isSelected = selectedDay === i
 
             calendar.push(
                 <div
@@ -45,44 +50,50 @@ const Calendar = ({ appointments }) => {
                 >
                     {i}
                 </div>
-            );
-            day++;
+            )
+            day++
         }
 
-        return calendar;
-    };
+        return calendar
+    }
+
+// DAY SELECTOR
 
     const handleDayClick = (day) => {
-        setSelectedDay(day);
-    };
+        setSelectedDay(day)
+    }
 
     const closeModal = () => {
-        setSelectedDay(null);
-    };
+        setSelectedDay(null)
+    }
 
     const selectedAppointmentDetails = appointments
         .filter((appointment) => {
-            const appointmentDate = new Date(appointment.date);
+            const appointmentDate = new Date(appointment.date)
             return (
                 appointmentDate.getFullYear() === date.getFullYear() &&
                 appointmentDate.getMonth() === date.getMonth() &&
                 appointmentDate.getDate() === selectedDay
-            );
+            )
         })
         .map((appointment) => (
             <div key={appointment.id} className="appointment-details">
                 <p>{appointment.time}</p>
                 <p>{appointment.client_id}</p>
             </div>
-        ));
+        ))
+
+// SWITCH MONTHS
 
     const goToPrevMonth = () => {
-        setDate(new Date(date.getFullYear(), date.getMonth() - 1, date.getDate()));
-    };
+        setDate(new Date(date.getFullYear(), date.getMonth() - 1, date.getDate()))
+    }
 
     const goToNextMonth = () => {
-        setDate(new Date(date.getFullYear(), date.getMonth() + 1, date.getDate()));
-    };
+        setDate(new Date(date.getFullYear(), date.getMonth() + 1, date.getDate()))
+    }
+
+// JSX
 
     return (
         <div className="calendar-container">
@@ -119,7 +130,7 @@ const Calendar = ({ appointments }) => {
                 </div>
             )}
         </div>
-    );
-};
+    )
+}
 
 export default Calendar;
