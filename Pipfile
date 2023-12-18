@@ -15,6 +15,7 @@ Faker = "14.2.0"
 sqlalchemy-serializer = "*"
 flask-Bcrypt = "*"
 flask-cors = "*"
+boto3 = "*"
 
 
 [dev-packages]
