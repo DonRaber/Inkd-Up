@@ -111,6 +111,14 @@ button{
   border-radius: 20%;
 }
 
+.has-appointment {
+  background-color: pink;
+}
+
+.selected {
+  background-color: crimson;
+}
+
 .empty-cell {
   height: 40px;
   border: 1px solid #ccc;

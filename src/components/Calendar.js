@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 
-const Calendar = ({ appointments }) => {
+const Calendar = ({ appointments, clients }) => {
 
-// USE STATE AND VARIABLES
+
+    // USE STATE AND VARIABLES
 
     const [date, setDate] = useState(new Date())
     const [selectedDay, setSelectedDay] = useState(null)
@@ -15,49 +16,52 @@ const Calendar = ({ appointments }) => {
         return new Date(date.getFullYear(), date.getMonth(), 1).getDay()
     }
 
-// GENERATE CALENDAR
+    // GENERATE CALENDAR
 
     const generateCalendar = () => {
-        const totalDays = daysInMonth(date.getMonth(), date.getFullYear())
-        const startDay = startOfMonth()
+        const totalDays = daysInMonth(date.getMonth(), date.getFullYear());
+        const startDay = startOfMonth();
 
-        const calendar = []
-        let day = 1
+        const calendar = [];
+        let day = 1;
 
         for (let i = 0; i < startDay; i++) {
-            calendar.push(<div key={`empty-${i}`} className="empty-cell"></div>)
+            calendar.push(<div key={`empty-${i}`} className="empty-cell"></div>);
         }
 
         for (let i = 1; i <= totalDays; i++) {
-            const currentDate = new Date(date.getFullYear(), date.getMonth(), i)
+            const currentDate = new Date(date.getFullYear(), date.getMonth(), i);
             const isAppointmentDay = appointments.some((appointment) => {
                 const appointmentDate = new Date(appointment.date);
+                appointmentDate.setUTCHours(0, 0, 0, 0);
+                appointmentDate.setMinutes(appointmentDate.getMinutes() + appointmentDate.getTimezoneOffset());
                 return (
-                    appointmentDate.getFullYear() === currentDate.getFullYear() &&
-                    appointmentDate.getMonth() === currentDate.getMonth() &&
-                    appointmentDate.getDate() === currentDate.getDate()
-                )
-            })
+                    currentDate.getUTCFullYear() === appointmentDate.getUTCFullYear() &&
+                    currentDate.getUTCMonth() === appointmentDate.getUTCMonth() &&
+                    currentDate.getUTCDate() === appointmentDate.getUTCDate()
+                );
+            });
 
-            const isSelected = selectedDay === i
+            const isSelected = selectedDay === i;
+
+            const cellClassName = `calendar-cell ${isAppointmentDay ? "has-appointment" : ""} ${isSelected ? "selected" : ""}`;
 
             calendar.push(
                 <div
                     key={i}
-                    className={`calendar-cell ${isAppointmentDay ? "has-appointment" : ""} ${isSelected ? "selected" : ""
-                        }`}
+                    className={cellClassName}
                     onClick={() => handleDayClick(i)}
                 >
                     {i}
                 </div>
-            )
-            day++
+            );
+            day++;
         }
 
-        return calendar
+        return calendar;
     }
 
-// DAY SELECTOR
+    // DAY SELECTOR
 
     const handleDayClick = (day) => {
         setSelectedDay(day)
@@ -69,31 +73,47 @@ const Calendar = ({ appointments }) => {
 
     const selectedAppointmentDetails = appointments
         .filter((appointment) => {
-            const appointmentDate = new Date(appointment.date)
+            const appointmentDate = new Date(appointment.date);
+
             return (
-                appointmentDate.getFullYear() === date.getFullYear() &&
-                appointmentDate.getMonth() === date.getMonth() &&
-                appointmentDate.getDate() === selectedDay
+                appointmentDate.getUTCFullYear() === date.getFullYear() &&
+                appointmentDate.getUTCMonth() === date.getMonth() &&
+                appointmentDate.getUTCDate() === (selectedDay || 1)
+            );
+        })
+
+        .sort((a, b) => {
+            const timeA = new Date(`${date.getFullYear()}-${date.getMonth() + 1}-${selectedDay} ${a.time}`).getTime();
+            const timeB = new Date(`${date.getFullYear()}-${date.getMonth() + 1}-${selectedDay} ${b.time}`).getTime();
+            return timeA - timeB;
+        })
+
+        .map((appointment) => {
+            const appointmentDate = new Date(appointment.date);
+            const client = clients.find((client) => client.id === appointment.client_id);
+            const clientName = client ? client.name : "Unknown Client";
+
+            console.log(appointmentDate)
+
+            return (
+                <div key={appointment.id} className="appointment-details">
+                    <p>{appointment.time}</p>
+                    <p>{clientName}</p>
+                </div>
             )
         })
-        .map((appointment) => (
-            <div key={appointment.id} className="appointment-details">
-                <p>{appointment.time}</p>
-                <p>{appointment.client_id}</p>
-            </div>
-        ))
 
-// SWITCH MONTHS
+    // SWITCH MONTHS
 
     const goToPrevMonth = () => {
-        setDate(new Date(date.getFullYear(), date.getMonth() - 1, date.getDate()))
+        setDate(new Date(date.getFullYear(), date.getMonth() - 1, 1));
     }
 
     const goToNextMonth = () => {
-        setDate(new Date(date.getFullYear(), date.getMonth() + 1, date.getDate()))
+        setDate(new Date(date.getFullYear(), date.getMonth() + 1, 1));
     }
 
-// JSX
+    // JSX
 
     return (
         <div className="calendar-container">

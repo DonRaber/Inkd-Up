@@ -240,7 +240,7 @@ def artists():
     artists = Artist.query.all()
 
     if request.method == 'GET':
-        return make_response([artist.to_dict(rules = ('-appointments.client', '-reviews.client')) for artist in artists], 200)
+        return make_response([artist.to_dict(rules = ('-reviews.client',)) for artist in artists], 200)
     
     elif request.method == 'POST':
         form_data = request.get_json()

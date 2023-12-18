@@ -117,7 +117,7 @@ function App() {
                         {userProfile}
                     </Route>
                     <Route exact path='/user_profile/:username'>
-                        <Profile artists={artists} loggedIn={loggedIn} shops={shops} />
+                        <Profile artists={artists} loggedIn={loggedIn} shops={shops} clients={clients} />
                     </Route>
                     <Route exact path='/profile_search'>
                         <Search users={users} loggedIn={loggedIn} />

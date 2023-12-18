@@ -13,7 +13,6 @@ function Navbar({ loggedIn }) {
 
     function toggleNav(e) {
         setToggle(!toggle)
-        console.log('clicked')
     }
 
 // LOGOUT
