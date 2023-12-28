@@ -28,6 +28,7 @@ class Message(db.Model, SerializerMixin):
     serialize_rules = ('-sender.sent_messages', '-receiver.received_messages')
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 class User(db.Model, SerializerMixin):
     __tablename__ = 'users'
 
