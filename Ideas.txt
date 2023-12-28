@@ -1,0 +1,13 @@
+Concept ideas for Messaging and notifications system:
+
+For appointment notifications:
+- create a user called system that will auto send out messages to recipients upon appt creations
+
+- Message will be sent to artist to confirm date/reschedule/cancel 
+        - upon cancellation system could recommend 2 other artists that are similar for booking based upon search results ranging from info or even dates
+
+- Add some rules to not allow same time/day bookings
+- Allow artist to setup availability 
+- Add apointment sessions/typings (consultation, first session, second session)
+
+- Figure out a way to handle deposit and possibly payment (venmo, paypal, cash)
