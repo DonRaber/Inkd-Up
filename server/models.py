@@ -22,7 +22,10 @@ class Message(db.Model, SerializerMixin):
     timestamp = db.Column(db.DateTime, server_default=func.now())
     read = db.Column(db.Boolean, default=False)
     
-    user = db.relationship('User', back_populates = 'messages', cascade = 'all, delete-orphan')
+    sender = db.relationship('User', foreign_keys=[sender_id], back_populates = 'sent_messages')
+    receiver = db.relationship('User', foreign_keys=[receiver_id], back_populates = 'received_messages')
+    
+    serialize_rules = ('-sender.sent_messages', '-receiver.received_messages')
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------
 class User(db.Model, SerializerMixin):
@@ -37,9 +40,11 @@ class User(db.Model, SerializerMixin):
     client = db.relationship('Client', back_populates = 'user', cascade = 'all, delete-orphan')
     artist = db.relationship('Artist', back_populates = 'user', cascade = 'all, delete-orphan')
     shop = db.relationship('Shop', back_populates = 'user', cascade = 'all, delete-orphan')
-    messages = db.relationship('Message', back_populates = 'user', cascade = 'all, delete-orphan')
+    
+    sent_messages = db.relationship('Message', foreign_keys=[Message.sender_id], back_populates = 'sender', cascade= 'all, delete-orphan')
+    received_messages = db.relationship('Message', foreign_keys=[Message.receiver_id], back_populates = 'receiver', cascade= 'all, delete-orphan')
 
-    serialize_rules = ('-client.user', '-artist.user', '-shop.user')
+    serialize_rules = ('-client.user', '-artist.user', '-shop.user', '-sent_messages.sender', '-received_messages.receiver')
 
     def upload_profile_picture(self, file):
         try:

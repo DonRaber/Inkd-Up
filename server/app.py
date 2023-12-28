@@ -1,6 +1,6 @@
 from flask import make_response, request, session
 from sqlalchemy.exc import IntegrityError
-from models import db, Client, Artist, Shop, Appointment, Picture, Review, User
+from models import db, Client, Artist, Shop, Appointment, Picture, Review, User, Message
 from config import db, app
 from datetime import datetime
 
@@ -18,6 +18,18 @@ def index():
 
 #     if request.endpoint not in open_access_list and 'user_id' not in session:
 #         return make_response({'error': '401 Unauthorized'}, 401)
+
+#----------------------------------------------------------------------------- BIG DADDY CHRIS SECTION -------
+
+@app.route('/messages', methods=['GET'])
+def get_message():
+    messages = Message.query.all()
+    if request.method == 'GET':
+        return make_response([message.to_dict() for message in messages], 200)
+
+
+#----------------------------------------------------------------------------- BIG DADDY CHRIS SECTION -------
+
 
 @app.route('/signup', methods=['POST'])
 def signup():
