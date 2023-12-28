@@ -1,3 +1,4 @@
+from sqlalchemy.sql import func
 from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.orm import validates
@@ -8,6 +9,22 @@ import re
 
 from config import db, bcrypt, AWS_ACCESS_KEY, AWS_SECRET_KEY
 
+
+
+# ----------------------------------------------------------------------------------------------------------------------CHRIS'S WORKSPACE FOR INBOX-----------
+class Message(db.Model, SerializerMixin):
+    __tablename__ = 'messages'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    sender_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    receiver_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    message = db.Column(db.String)
+    timestamp = db.Column(db.DateTime, server_default=func.now())
+    read = db.Column(db.Boolean, default=False)
+    
+    user = db.relationship('User', back_populates = 'messages', cascade = 'all, delete-orphan')
+
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------
 class User(db.Model, SerializerMixin):
     __tablename__ = 'users'
 
@@ -20,6 +37,7 @@ class User(db.Model, SerializerMixin):
     client = db.relationship('Client', back_populates = 'user', cascade = 'all, delete-orphan')
     artist = db.relationship('Artist', back_populates = 'user', cascade = 'all, delete-orphan')
     shop = db.relationship('Shop', back_populates = 'user', cascade = 'all, delete-orphan')
+    messages = db.relationship('Message', back_populates = 'user', cascade = 'all, delete-orphan')
 
     serialize_rules = ('-client.user', '-artist.user', '-shop.user')
 

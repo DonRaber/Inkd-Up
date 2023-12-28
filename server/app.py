@@ -6,7 +6,7 @@ from datetime import datetime
 
 @app.route('/')
 def index():
-    return '<h1>Inkd Up</h1>'
+    return '<h1>Ink\'d Up</h1>'
 
 # @app.before_request
 # def check_if_logged_in():
