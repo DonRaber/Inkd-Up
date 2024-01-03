@@ -28,7 +28,18 @@ class Message(db.Model, SerializerMixin):
     sender = db.relationship('User', foreign_keys=[sender_id], back_populates = 'sent_messages')
     receiver = db.relationship('User', foreign_keys=[receiver_id], back_populates = 'received_messages')
     
-    serialize_rules = ('-sender.received_messages', '-receiver.sent_messages', '-sender.sent_messages', '-receiver.received_messages', '-receiver._password_hash', '-sender._password_hash')
+    serialize_rules = ('-sender.received_messages', 
+                       '-sender.sent_messages', 
+                       '-sender._password_hash',
+                       '-sender.shop', 
+                       '-sender.client', 
+                       '-sender.artist',
+                       '-receiver.received_messages',
+                       '-receiver.sent_messages', 
+                       '-receiver._password_hash',
+                       '-receiver.shop', 
+                       '-receiver.client', 
+                       '-receiver.artist')
 
 
 # --------------------------------------------------------------------------------------------------------------------------------------------
@@ -142,8 +153,8 @@ class Client(db.Model, SerializerMixin):
     name = db.Column(db.String)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
-    # appointments = db.relationship('Appointment', back_populates='client', cascade='all, delete-orphan')
-    # reviews = db.relationship('Review', back_populates = 'client', cascade = 'all, delete-orphan')
+    appointments = db.relationship('Appointment', back_populates='client', cascade='all, delete-orphan')
+    reviews = db.relationship('Review', back_populates = 'client', cascade = 'all, delete-orphan')
     user = db.relationship('User', back_populates = 'client')
 
     serialize_rules = ('-user.shop', '-user.artist', '-user.client', '-appointments.client', '-reviews.client', '-appointments.artist', '-appointments.shop' )
@@ -172,8 +183,8 @@ class Artist(db.Model, SerializerMixin):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
 
-    # appointments = db.relationship('Appointment', back_populates='artist', cascade='all, delete-orphan')
-    # reviews = db.relationship('Review', back_populates = 'artist', cascade = 'all, delete-orphan')
+    appointments = db.relationship('Appointment', back_populates='artist', cascade='all, delete-orphan')
+    reviews = db.relationship('Review', back_populates = 'artist', cascade = 'all, delete-orphan')
     pictures = db.relationship('Picture', back_populates = 'artist', cascade = 'all, delete-orphan')
     user = db.relationship('User', back_populates = 'artist')
 
@@ -240,8 +251,8 @@ class Appointment(db.Model, SerializerMixin):
     client_id = db.Column(db.Integer, db.ForeignKey('clients.id'))
     shop_id = db.Column(db.Integer, db.ForeignKey('shops.id'))
 
-    # artist = db.relationship('Artist', back_populates = 'appointments')
-    # client = db.relationship('Client', back_populates = 'appointments')
+    artist = db.relationship('Artist', back_populates = 'appointments')
+    client = db.relationship('Client', back_populates = 'appointments')
     shop = db.relationship('Shop', back_populates = 'appointments')
 
     serialize_rules = ('-artist.appointments', '-client.appointments', '-shop.appointments')
@@ -284,8 +295,8 @@ class Review(db.Model, SerializerMixin):
     client_id = db.Column(db.Integer, db.ForeignKey('clients.id'))
     artist_id = db.Column(db.Integer, db.ForeignKey('artists.id'))
 
-    # client = db.relationship('Client', back_populates = 'reviews')
-    # artist = db.relationship('Artist', back_populates = 'reviews')
+    client = db.relationship('Client', back_populates = 'reviews')
+    artist = db.relationship('Artist', back_populates = 'reviews')
 
     serialize_rules = ('-client.reviews', '-artist.reviews')
 
