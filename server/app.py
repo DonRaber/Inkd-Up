@@ -19,16 +19,21 @@ def index():
 #     if request.endpoint not in open_access_list and 'user_id' not in session:
 #         return make_response({'error': '401 Unauthorized'}, 401)
 
-#----------------------------------------------------------------------------- BIG DADDY CHRIS SECTION -------
+# --------------------------------------------------------------------------------------------------------------------------------------------
+#                                                       - MESSAGES - [GET]
+# --------------------------------------------------------------------------------------------------------------------------------------------
 
 @app.route('/messages', methods=['GET'])
 def get_message():
     messages = Message.query.all()
     if request.method == 'GET':
-        return make_response([message.to_dict() for message in messages], 200)
+        return make_response([message.to_dict(rules = ('-sent_messages.receiver._password_hash', )) for message in messages], 200)
+    
 
 
-#----------------------------------------------------------------------------- BIG DADDY CHRIS SECTION -------
+# --------------------------------------------------------------------------------------------------------------------------------------------
+#                                                       - SIGNUP - [POST]
+# --------------------------------------------------------------------------------------------------------------------------------------------
 
 
 @app.route('/signup', methods=['POST'])
@@ -67,6 +72,10 @@ def check_session():
 
     return make_response({}, 401)
 
+# --------------------------------------------------------------------------------------------------------------------------------------------
+#                                                       - LOGIN - [POST]
+# --------------------------------------------------------------------------------------------------------------------------------------------
+
 @app.route('/login', methods=['POST'])
 def login():
     form_data = request.get_json()
@@ -84,21 +93,38 @@ def login():
 
     return make_response({'error': '401 Unauthorized'}, 401)
 
+
+# --------------------------------------------------------------------------------------------------------------------------------------------
+#                                                       - LOGOUT - [DELETE]
+# --------------------------------------------------------------------------------------------------------------------------------------------
+
 @app.route('/logout', methods=['DELETE'])
 def logout():
     session.pop('user_id', None)
     return make_response({}, 204)
 
-# -----------------------------------
-# USERS
-# -----------------------------------
+# --------------------------------------------------------------------------------------------------------------------------------------------
+#                                                       - USERS - [GET, POST]
+# --------------------------------------------------------------------------------------------------------------------------------------------
 
 @app.route('/users', methods = ['GET','POST'])
 def users():
     users = User.query.all()
 
     if request.method == 'GET':
-        return make_response([user.to_dict(rules = ('-artist.appointments', '-artist.pictures', '-artist.reviews', '-client.appointments', '-client.reviews', '-shop.appointments')) for user in users], 200)
+        return make_response([user.to_dict(rules = ('-sent_messages.sender', 
+                                                    '-received_messages.sender.received_messages',
+                                                    '-received_messages.sender._password_hash', 
+                                                    '-received_messages.receiver', 
+                                                    '-sent_messages.receiver._password_hash', 
+                                                    '-sent_messages.sender', 
+                                                    '-_password_hash',
+                                                    '-artist.appointments', 
+                                                    '-artist.pictures',
+                                                    '-artist.reviews', 
+                                                    '-client.appointments',
+                                                    '-client.reviews',
+                                                    '-shop.appointments')) for user in users], 200)
     
     elif request.method == 'POST':
         form_data = request.get_json()
@@ -115,7 +141,9 @@ def users():
             resp = make_response({'error': ['Validation Errors']}, 400)
     return resp
 
-# USER BY ID
+# --------------------------------------------------------------------------------------------------------------------------------------------
+#                                                       - USER BY ID - [GET, PATCH, DELETE]
+# --------------------------------------------------------------------------------------------------------------------------------------------
 
 @app.route('/users/<int:id>', methods=['GET', 'PATCH', 'DELETE'])
 def user_by_id(id):
@@ -148,6 +176,10 @@ def user_by_id(id):
 
     return resp
 
+# --------------------------------------------------------------------------------------------------------------------------------------------
+#                                                 - PROFILE PICTURE UPLOAD - [PATCH]
+# --------------------------------------------------------------------------------------------------------------------------------------------
+
 @app.route('/upload_profile_picture', methods=['PATCH'])
 def upload_profile_picture():
     try:
@@ -176,9 +208,9 @@ def upload_profile_picture():
         return resp
 
 
-# -----------------------------------
-# CLIENTS
-# -----------------------------------
+# --------------------------------------------------------------------------------------------------------------------------------------------
+#                                                       - CLIENTS - [GET, POST]
+# --------------------------------------------------------------------------------------------------------------------------------------------
 
 @app.route('/clients', methods = ['GET', 'POST'])
 def clients():
@@ -201,7 +233,9 @@ def clients():
             resp = make_response({'error': ['Validation Errors']}, 400)
     return resp
 
-# CLIENT BY USER_ID
+# --------------------------------------------------------------------------------------------------------------------------------------------
+#                                                       - CLIENT BY ID - [PATCH, DELETE]
+# --------------------------------------------------------------------------------------------------------------------------------------------
 
 @app.route('/clients/user_<int:user_id>', methods=['PATCH', 'DELETE'])
 def client_by_user_id(user_id):
@@ -243,9 +277,9 @@ def client_by_user_id(user_id):
         resp = make_response({ "error": "No Client Found!"}, 404)
     return resp
 
-# -----------------------------------
-# ARTISTS
-# -----------------------------------
+# --------------------------------------------------------------------------------------------------------------------------------------------
+#                                                       - ARTISTS - [GET, POST]
+# --------------------------------------------------------------------------------------------------------------------------------------------
 
 @app.route('/artists', methods = ['GET', 'POST'])
 def artists():
@@ -268,7 +302,9 @@ def artists():
             resp = make_response({'error': ['Validation Errors']}, 400)
     return resp
 
-# ARTIST BY USER_ID
+# --------------------------------------------------------------------------------------------------------------------------------------------
+#                                                       - ARTIST BY ID - [PATCH, DELETE]
+# --------------------------------------------------------------------------------------------------------------------------------------------
 
 @app.route('/artists/user_<int:user_id>', methods=['PATCH', 'DELETE'])
 def artist_by_user_id(user_id):
@@ -309,9 +345,9 @@ def artist_by_user_id(user_id):
         resp = make_response({ "error": "No Artist Found!"}, 404)
     return resp
     
-# -----------------------------------
-# SHOPS
-# -----------------------------------
+# --------------------------------------------------------------------------------------------------------------------------------------------
+#                                                       - SHOPS - [GET, POST]
+# --------------------------------------------------------------------------------------------------------------------------------------------
 
 @app.route('/shops', methods = ['GET', 'POST'])
 def shops():
@@ -335,7 +371,9 @@ def shops():
             resp = make_response({'error': ['Validation Errors']}, 400)
     return resp
 
-# SHOP BY USER_ID
+# --------------------------------------------------------------------------------------------------------------------------------------------
+#                                                       - SHOP BY ID - [PATCH, DELETE]
+# --------------------------------------------------------------------------------------------------------------------------------------------
 
 @app.route('/shops/user_<int:user_id>', methods=['PATCH', 'DELETE'])
 def shop_by_user_id(user_id):
@@ -377,9 +415,9 @@ def shop_by_user_id(user_id):
         resp = make_response({ "error": "No Shop Found!"}, 404)
     return resp
 
-# -----------------------------------
-# APPOINTMENTS
-# -----------------------------------
+# --------------------------------------------------------------------------------------------------------------------------------------------
+#                                                       - APPOINTMENTS - [GET, POST, PATCH, DELETE]
+# --------------------------------------------------------------------------------------------------------------------------------------------
 
 @app.route('/appointments', methods = ['GET', 'POST', 'PATCH', 'DELETE'])
 def appointments():
@@ -410,18 +448,18 @@ def appointments():
             resp = make_response({'error': ['Validation Errors']}, 400)
     return resp
 
-# -----------------------------------
-# PICTURES
-# -----------------------------------
+# --------------------------------------------------------------------------------------------------------------------------------------------
+#                                                       - PICTURES - [GET, POST, DELETE]
+# --------------------------------------------------------------------------------------------------------------------------------------------
 
 @app.route('/pictures', methods = ['GET', 'POST', 'DELETE'])
 def pictures():
     pictures = Picture.query.all()
     return make_response([picture.to_dict(rules = ('-artist.appointments', '-artist.reviews', '-artist.user')) for picture in pictures], 200)
 
-# -----------------------------------
-# REVIEWS
-# -----------------------------------
+# --------------------------------------------------------------------------------------------------------------------------------------------
+#                                                       - REVIEWS - [GET, POST, DELETE]
+# --------------------------------------------------------------------------------------------------------------------------------------------
 
 @app.route('/reviews', methods = ['GET', 'POST', 'DELETE'])
 def reviews():

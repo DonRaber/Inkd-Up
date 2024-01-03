@@ -11,9 +11,21 @@ with app.app_context():
     # Picture.query.delete()
     # Review.query.delete()
     # User.query.delete()
+    
+    print('Seeding messages....')
+    
     Message.query.delete()
     
+    message1 = Message(
+        sender_id='1',
+        receiver_id='2',
+        message='Hello, friend!'        
+        )
+    db.session.add(message1)
+    db.session.commit()
 
+    print('Seeding messages complete!')
+    
     # user1 = User(username = 'Roqit', email = 'example@example')
     # user2 = User(username = 'Roqit1', email = 'example@example1')
     # user3 = User(username = 'Roqit2', email = 'example@example2')
