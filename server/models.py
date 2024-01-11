@@ -268,8 +268,8 @@ class Appointment(db.Model, SerializerMixin):
                 date = self.date
             ).first()
 
-        if existing_appointment and existing_appointment.id != self.od:
-            raise ValueError(f'Artist is already booked for the selected time and date!')
+            if existing_appointment and existing_appointment.id != self.id:
+                raise ValueError(f'Artist is already booked for the selected time and date!')
         
         return value
 
