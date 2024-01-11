@@ -1,6 +1,6 @@
 from flask import make_response, request, session
 from sqlalchemy.exc import IntegrityError
-from models import db, Client, Artist, Shop, Appointment, Picture, Review, User, Message
+from models import db, Client, Artist, Shop, Appointment, Picture, Review, User, Message, Specialization
 from config import db, app
 from datetime import datetime
 
@@ -466,6 +466,11 @@ def reviews():
     reviews = Review.query.all()
     return make_response([review.to_dict(rules = ('-artist.appointments', '-artist.user', '-artist.pictures', '-client.appointments', '-client.user')) for review in reviews], 200)
     
+
+@app.route('/specializations', methods = ['GET'])
+def specializations():
+    specializations = Specialization.query.all()
+    return make_response([specialization.to_dict() for specialization in specializations], 200)
 
 
 

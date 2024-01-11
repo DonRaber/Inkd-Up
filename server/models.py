@@ -181,12 +181,14 @@ class Artist(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    specializations_id = db.Column(db.Integer, db.ForeignKey('specializations.id'))
 
 
     appointments = db.relationship('Appointment', back_populates='artist', cascade='all, delete-orphan')
     reviews = db.relationship('Review', back_populates = 'artist', cascade = 'all, delete-orphan')
     pictures = db.relationship('Picture', back_populates = 'artist', cascade = 'all, delete-orphan')
     user = db.relationship('User', back_populates = 'artist')
+    specializations = db.relationship('Specialization', back_populates = 'artists')
 
     clients = association_proxy('appointments', 'client')
 
@@ -257,6 +259,20 @@ class Appointment(db.Model, SerializerMixin):
 
     serialize_rules = ('-artist.appointments', '-client.appointments', '-shop.appointments')
 
+    @validates('time', 'date', 'artist_id')
+    def validate_double_booking(self, key, value):
+        if key == 'time' or key == 'date':
+            existing_appointment = Appointment.query.filter_by(
+                artist_id = self.artist_id,
+                time = self.time,
+                date = self.date
+            ).first()
+
+        if existing_appointment and existing_appointment.id != self.od:
+            raise ValueError(f'Artist is already booked for the selected time and date!')
+        
+        return value
+
     def __repr__(self):
         return f'<Appointment {self.id}, {self.time}, {self.date}, Artist: {self.artist_id}, Client: {self.client_id}, Shop: {self.shop_id}>'
     pass
@@ -303,3 +319,15 @@ class Review(db.Model, SerializerMixin):
     def __repr__(self):
         return f'<Review {self.id}, Client: {self.client_id}, Artist: {self.artist_id}, {self.comment}>'
     pass
+
+# --------------------------------------------------------------------------------------------------------------------------------------------
+#                                                       - class SPECIALIZATIONS -
+# --------------------------------------------------------------------------------------------------------------------------------------------
+
+class Specialization(db.Model, SerializerMixin):
+        __tablename__ = 'specializations'
+
+        id = db.Column(db.Integer, primary_key=True)
+        type = db.Column(db.String)
+
+        artists = db.relationship('Artist', back_populates = 'specializations')

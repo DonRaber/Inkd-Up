@@ -1,5 +1,5 @@
 from app import app
-from models import db, Client, Artist, Shop, Appointment, Picture, Review, User, Message
+from models import db, Client, Artist, Shop, Appointment, Picture, Review, User, Message, Specialization
 import datetime
 
 with app.app_context():
@@ -12,19 +12,41 @@ with app.app_context():
     # Review.query.delete()
     # User.query.delete()
     
-    print('Seeding messages....')
+    # print('Seeding messages....')
     
-    Message.query.delete()
+    # Message.query.delete()
     
-    message1 = Message(
-        sender_id='1',
-        receiver_id='2',
-        message='Hello, friend!'        
-        )
-    db.session.add(message1)
+    # message1 = Message(
+    #     sender_id='1',
+    #     receiver_id='2',
+    #     message='Hello, friend!'        
+    #     )
+    # db.session.add(message1)
+    # db.session.commit()
+
+    # print('Seeding messages complete!')
+
+    print('Seeding Specializations...')
+
+    Specialization.query.delete()
+
+    spec1 = Specialization(type= 'Tribal')
+    spec2 = Specialization(type= 'Realism')
+    spec3 = Specialization(type= 'Anime')
+    spec4 = Specialization(type= 'Traditional')
+    spec5 = Specialization(type= 'Surealism')
+    spec6 = Specialization(type= 'Portrait')
+    spec7 = Specialization(type= 'Japanese')
+    spec8 = Specialization(type= 'New School')
+    spec9 = Specialization(type= 'Black and Grey')
+    spec10 = Specialization(type= 'Water Color')
+    spec11 = Specialization(type= 'Stippling')
+    spec12 = Specialization(type= 'Cover Ups')
+
+    db.session.add_all([spec1, spec2, spec3, spec4, spec5, spec6, spec7, spec8, spec9, spec10, spec11, spec12])
     db.session.commit()
 
-    print('Seeding messages complete!')
+    print('Seed succesfull!')
     
     # user1 = User(username = 'Roqit', email = 'example@example')
     # user2 = User(username = 'Roqit1', email = 'example@example1')
